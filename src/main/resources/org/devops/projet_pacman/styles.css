@@ -1,0 +1,49 @@
+@font-face {
+    font-family: "PacmanFont";
+    src: url("pacman-font.ttf"); /* Assurez-vous que le chemin est correct */
+}
+
+.root {
+    -fx-background-color: linear-gradient(to bottom, rgba(15, 15, 15, 0.95), rgba(26, 26, 26, 0.95)); /* Fond noir avec dégradé */
+    -fx-font-family: "PacmanFont"; /* Police Pacman pour tout le projet */
+    -fx-pref-height: 100%; /* Remplit toute la hauteur */
+    -fx-pref-width: 100%; /* Remplit toute la largeur */
+}
+
+.futuristic-div {
+    -fx-alignment: center;
+    -fx-cursor: hand;
+}
+
+.futuristic-border {
+    -fx-fill: transparent;
+    -fx-stroke: #CCCCCC;
+    -fx-stroke-width: 2px;
+    -fx-effect: dropshadow(gaussian, #CCCCCC, 10, 0.5, 0, 0);
+    -fx-arc-width: 15;
+    -fx-arc-height: 15;
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+/* Texte futuristique */
+.futuristic-text {
+    -fx-font-size: 4vw; /* Taille du texte dépendante de la largeur de la fenêtre */
+    -fx-font-weight: bold;
+    -fx-fill: #FFFFFF; /* Texte blanc */
+}
+
+/* Effet hover (survol) pour la bordure */
+.futuristic-div:hover .futuristic-border {
+    -fx-stroke: #FFD700; /* Bordure jaune vif */
+    -fx-effect: dropshadow(gaussian, #FFD700, 20, 0.8, 0, 0); /* Glow intense sur la bordure */
+}
+
+/* Effet hover pour le texte */
+.futuristic-div:hover .futuristic-text {
+    -fx-fill: #FFD700; /* Texte jaune vif */
+}
+
+/* Effet clic (facultatif) */
+.futuristic-div:pressed .futuristic-border {
+    -fx-stroke: #FFA500; /* Orange foncé lors du clic */
+}

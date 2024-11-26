@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@styles.css" style="-fx-background-color: #000000; -fx-end-margin: 40px;" fx:controller="org.devops.projet_pacman.LeaderboardController">
+
+
+    <VBox alignment="CENTER" spacing="20" style="-fx-background-color: #000000; -fx-end-margin: 40px;" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+    <ImageView fx:id="logo" fitWidth="150" fitHeight="150" />
+
+    <StackPane fx:id="divJouer" styleClass="futuristic-div">
+        <Rectangle fx:id="borderJouer" width="200" height="50" styleClass="futuristic-border" />
+        <Text fx:id="textJouer" text="Jouer" styleClass="futuristic-text" />
+    </StackPane>
+
+    <!-- Exemple d'options -->
+    <CheckBox text="Activer les sons" />
+    <CheckBox text="Mode plein écran" />
+
+    <!-- Bouton Retour -->
+    <Button fx:id="btnRetour" text="Retour" styleClass="futuristic-button" />
+</VBox>
+</AnchorPane>
