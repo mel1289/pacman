@@ -10,12 +10,12 @@
     -fx-pref-width: 100%; /* Remplit toute la largeur */
 }
 
-.futuristic-div {
+.menu-div {
     -fx-alignment: center;
     -fx-cursor: hand;
 }
 
-.futuristic-border {
+.menu-border {
     -fx-fill: transparent;
     -fx-stroke: #CCCCCC;
     -fx-stroke-width: 2px;
@@ -26,24 +26,63 @@
 }
 
 /* Texte futuristique */
-.futuristic-text {
-    -fx-font-size: 4vw; /* Taille du texte dépendante de la largeur de la fenêtre */
+.menu-text {
+    -fx-font-size: 16px; /* Taille du texte dépendante de la largeur de la fenêtre */
+    -fx-font-weight: bold;
+    -fx-fill: #FFFFFF; /* Texte blanc */
+}
+
+.menu-title {
+    -fx-font-size: 28px;
     -fx-font-weight: bold;
     -fx-fill: #FFFFFF; /* Texte blanc */
 }
 
 /* Effet hover (survol) pour la bordure */
-.futuristic-div:hover .futuristic-border {
+.menu-div:hover .menu-border {
     -fx-stroke: #FFD700; /* Bordure jaune vif */
     -fx-effect: dropshadow(gaussian, #FFD700, 20, 0.8, 0, 0); /* Glow intense sur la bordure */
 }
 
 /* Effet hover pour le texte */
-.futuristic-div:hover .futuristic-text {
+.menu-div:hover .menu-text {
     -fx-fill: #FFD700; /* Texte jaune vif */
 }
 
 /* Effet clic (facultatif) */
-.futuristic-div:pressed .futuristic-border {
+.menu-div:pressed .menu-border {
     -fx-stroke: #FFA500; /* Orange foncé lors du clic */
+}
+
+/* Style général pour la ListView */
+.list-view {
+    -fx-background-color: transparent; /* Fond transparent */
+    -fx-border-color: #FFD700; /* Bordure jaune vif */
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px; /* Coins arrondis */
+    -fx-padding: 10px; /* Espacement interne */
+}
+
+/* Style des cellules dans la ListView */
+.list-cell {
+    -fx-background-color: #000000; /* Fond noir */
+    -fx-text-fill: #FFFFFF; /* Texte blanc */
+    -fx-font-family: "PacmanFont"; /* Police Pacman */
+    -fx-font-size: 16px;
+    -fx-alignment: center-left; /* Alignement du texte à gauche */
+    -fx-padding: 5px 10px; /* Espacement interne */
+}
+
+/* Effet de survol (hover) pour les cellules */
+.list-cell:hover {
+    -fx-background-color: #FFD700; /* Fond jaune vif */
+    -fx-text-fill: #000000; /* Texte noir */
+    -fx-font-weight: bold; /* Texte en gras */
+}
+
+/* Effet sélectionné pour les cellules */
+.list-cell:selected {
+    -fx-background-color: #FFA500; /* Orange vif */
+    -fx-text-fill: #FFFFFF; /* Texte blanc */
+    -fx-font-weight: bold;
 }

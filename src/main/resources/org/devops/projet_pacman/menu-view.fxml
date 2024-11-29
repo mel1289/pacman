@@ -6,41 +6,42 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            stylesheets="@styles.css" style="-fx-background-color: #000000; -fx-end-margin: 40px;" fx:controller="org.devops.projet_pacman.MenuController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
+            stylesheets="@styles.css" style="-fx-background-color: #000000;" fx:controller="org.devops.projet_pacman.MenuController">
 
-    <VBox alignment="CENTER" spacing="20" style="-fx-background-color: #000000; -fx-end-margin: 40px;" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+    <VBox fx:id="centerContent" alignment="CENTER" spacing="20"
+          AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
         <ImageView fx:id="logo" preserveRatio="true" />
 
-        <StackPane fx:id="playButton" styleClass="futuristic-div">
-            <Rectangle fx:id="borderJouer" width="200" height="50" styleClass="futuristic-border" />
-            <Text fx:id="textJouer" text="Jouer" styleClass="futuristic-text" />
+        <StackPane fx:id="playButton" styleClass="menu-div">
+            <Rectangle fx:id="borderJouer" width="200" height="50" styleClass="menu-border" />
+            <Text fx:id="textJouer" text="Jouer" styleClass="menu-text" />
         </StackPane>
 
-        <StackPane fx:id="leaderboardButton" styleClass="futuristic-div">
-            <Rectangle fx:id="borderOptions" width="200" height="50" styleClass="futuristic-border" />
-            <Text fx:id="textOptions" text="Classement" styleClass="futuristic-text" />
+        <StackPane fx:id="leaderboardButton" styleClass="menu-div">
+            <Rectangle fx:id="borderOptions" width="200" height="50" styleClass="menu-border" />
+            <Text fx:id="textOptions" text="Classement" styleClass="menu-text" />
         </StackPane>
 
-        <StackPane fx:id="exitButton" styleClass="futuristic-div">
-            <Rectangle fx:id="borderQuitter" width="200" height="50" styleClass="futuristic-border" />
-            <Text fx:id="textQuitter" text="Quitter" styleClass="futuristic-text" />
+        <StackPane fx:id="exitButton" styleClass="menu-div">
+            <Rectangle fx:id="borderQuitter" width="200" height="50" styleClass="menu-border" />
+            <Text fx:id="textQuitter" text="Quitter" styleClass="menu-text" />
         </StackPane>
     </VBox>
 
-<ImageView fx:id="iconBottomLeft" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20">
-    <image>
-        <Image url="@ghost.png" />
-    </image>
-    <fitWidth>50</fitWidth>
-    <fitHeight>50</fitHeight>
-</ImageView>
+    <ImageView fx:id="iconBottomLeft" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20">
+        <image>
+            <Image url="@ghost.png" />
+        </image>
+        <fitWidth>50</fitWidth>
+        <fitHeight>50</fitHeight>
+    </ImageView>
 
-<ImageView fx:id="iconBottomRight" AnchorPane.bottomAnchor="20" AnchorPane.rightAnchor="20">
-    <image>
-        <Image url="@ghost.png" />
-    </image>
-    <fitWidth>50</fitWidth>
-    <fitHeight>50</fitHeight>
-</ImageView>
+    <ImageView fx:id="iconBottomRight" AnchorPane.bottomAnchor="20" AnchorPane.rightAnchor="20">
+        <image>
+            <Image url="@ghost.png" />
+        </image>
+        <fitWidth>50</fitWidth>
+        <fitHeight>50</fitHeight>
+    </ImageView>
 </AnchorPane>
