@@ -35,6 +35,10 @@ public class ScreenManager {
         setScreenContent("leaderboard-view.fxml");
     }
 
+    public static void showPlay() {
+        setScreenContent("play-view.fxml");
+    }
+
     private static void setScreenContent(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(ScreenManager.class.getResource(fxmlFile));
