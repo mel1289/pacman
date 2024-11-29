@@ -10,6 +10,7 @@ module org.devops.projet_pacman {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.desktop;
 
     opens org.devops.projet_pacman to javafx.fxml;
     exports org.devops.projet_pacman;

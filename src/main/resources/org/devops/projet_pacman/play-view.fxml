@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.control.Button?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@styles.css" style="-fx-background-color: #000000; -fx-end-margin: 40px;" fx:controller="org.devops.projet_pacman.PlayController" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+
+
+    <VBox fx:id="centerContent" alignment="CENTER" spacing="20"
+          AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <ImageView fx:id="logo" fitWidth="150" fitHeight="150" />
+        <StackPane fx:id="divJouer" styleClass="futuristic-div">
+            <Rectangle fx:id="borderJouer" width="200" height="50" styleClass="futuristic-border" />
+            <Text fx:id="textJouer" text="Jouer" styleClass="futuristic-text" />
+        </StackPane>
+
+        <StackPane>
+            <Pane fx:id="gamePane" style="-fx-background-color: #000000"
+                  AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50"
+                  AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"/>
+        </StackPane>
+
+        <Button fx:id="btnRetour" text="Retour" styleClass="futuristic-button" />
+    </VBox>
+
+</AnchorPane>
