@@ -25,7 +25,7 @@ public class PlayController {
 
     @FXML
     public void initialize() {
-        logo.setImage(new Image(getClass().getResource("/org/devops/projet_pacman/logo.png").toExternalForm()));
+        logo.setImage(new Image(getClass().getResource("/org/devops/projet_pacman/images/logo.png").toExternalForm()));
 
         logo.setFitHeight(300);
         logo.setFitWidth(1000);
