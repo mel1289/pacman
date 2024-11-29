@@ -1,6 +1,6 @@
 @font-face {
     font-family: "PacmanFont";
-    src: url("pacman-font.ttf"); /* Assurez-vous que le chemin est correct */
+    src: url("fonts/pacman-font.ttf"); /* Assurez-vous que le chemin est correct */
 }
 
 .root {
@@ -54,35 +54,42 @@
     -fx-stroke: #FFA500; /* Orange foncé lors du clic */
 }
 
-/* Style général pour la ListView */
+/* Appliquer un style spécifique au ListView */
 .list-view {
     -fx-background-color: transparent; /* Fond transparent */
     -fx-border-color: #FFD700; /* Bordure jaune vif */
     -fx-border-width: 2px;
-    -fx-border-radius: 10px; /* Coins arrondis */
-    -fx-padding: 10px; /* Espacement interne */
+    -fx-border-radius: 10px;
+    -fx-padding: 10px;
+    -fx-control-inner-background: #000000; /* Fond interne noir */
+    -fx-control-inner-background-alt: #111111; /* Alternance pour les lignes */
+    -fx-fixed-cell-size: 40px; /* Taille des cellules */
+}
+
+/* Style des barres de défilement */
+.scroll-bar {
+    -fx-background-color: #FFD700; /* Fond jaune vif */
 }
 
 /* Style des cellules dans la ListView */
 .list-cell {
     -fx-background-color: #000000; /* Fond noir */
     -fx-text-fill: #FFFFFF; /* Texte blanc */
-    -fx-font-family: "PacmanFont"; /* Police Pacman */
+    -fx-font-family: "PacmanFont"; /* Police Pac-Man */
     -fx-font-size: 16px;
-    -fx-alignment: center-left; /* Alignement du texte à gauche */
-    -fx-padding: 5px 10px; /* Espacement interne */
+    -fx-alignment: center-left;
+    -fx-padding: 5px 10px;
 }
 
-/* Effet de survol (hover) pour les cellules */
+/* Effets pour les cellules */
 .list-cell:hover {
     -fx-background-color: #FFD700; /* Fond jaune vif */
-    -fx-text-fill: #000000; /* Texte noir */
-    -fx-font-weight: bold; /* Texte en gras */
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
 }
 
-/* Effet sélectionné pour les cellules */
 .list-cell:selected {
-    -fx-background-color: #FFA500; /* Orange vif */
-    -fx-text-fill: #FFFFFF; /* Texte blanc */
+    -fx-background-color: #FFA500; /* Fond orange vif */
+    -fx-text-fill: #FFFFFF;
     -fx-font-weight: bold;
 }
