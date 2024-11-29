@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.devops.projet_pacman.controllers.GameController" style="-fx-background-color: #000000;">
+    <Pane fx:id="gamePane">
+        <!-- Pac-Man -->
+        <ImageView fx:id="pacman">
+            <image>
+                <Image url="@../images/pacman_opened.png" />
+            </image>
+            <fitWidth>50</fitWidth>
+            <fitHeight>50</fitHeight>
+        </ImageView>
+    </Pane>
+</AnchorPane>

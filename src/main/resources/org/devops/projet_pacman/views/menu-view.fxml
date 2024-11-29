@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
-            stylesheets="@styles.css" style="-fx-background-color: #000000;" fx:controller="org.devops.projet_pacman.MenuController">
+            stylesheets="@../styles.css" style="-fx-background-color: #000000;" fx:controller="org.devops.projet_pacman.controllers.MenuController">
 
     <VBox fx:id="centerContent" alignment="CENTER" spacing="20"
           AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
@@ -31,7 +31,7 @@
 
     <ImageView fx:id="iconBottomLeft" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20">
         <image>
-            <Image url="@ghost.png" />
+            <Image url="@../images/ghost.png" />
         </image>
         <fitWidth>50</fitWidth>
         <fitHeight>50</fitHeight>
@@ -39,7 +39,7 @@
 
     <ImageView fx:id="iconBottomRight" AnchorPane.bottomAnchor="20" AnchorPane.rightAnchor="20">
         <image>
-            <Image url="@ghost.png" />
+            <Image url="@../images/ghost.png" />
         </image>
         <fitWidth>50</fitWidth>
         <fitHeight>50</fitHeight>

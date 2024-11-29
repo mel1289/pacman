@@ -14,4 +14,6 @@ module org.devops.projet_pacman {
 
     opens org.devops.projet_pacman to javafx.fxml;
     exports org.devops.projet_pacman;
+    exports org.devops.projet_pacman.controllers;
+    opens org.devops.projet_pacman.controllers to javafx.fxml;
 }

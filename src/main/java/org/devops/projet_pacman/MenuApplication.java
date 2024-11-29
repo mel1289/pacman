@@ -7,19 +7,24 @@ public class MenuApplication extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Configurer le gestionnaire d'écran
             ScreenManager.setPrimaryStage(primaryStage);
             ScreenManager.showMainScreen();
 
-            // Configuration de la fenêtre principale
             primaryStage.setTitle("PacMan Reborn");
             primaryStage.setMinHeight(700);
             primaryStage.setMinWidth(1000);
             primaryStage.setFullScreen(true);
+            primaryStage.setResizable(false);
 
-            // Supprime l'indication par défaut du plein écran
             primaryStage.fullScreenExitHintProperty().setValue("");
             primaryStage.setFullScreenExitKeyCombination(null);
+
+            primaryStage.fullScreenProperty().addListener((obs, wasFullScreen, isFullScreen) -> {
+                if (!isFullScreen) {
+                    primaryStage.setFullScreen(true);
+                }
+            });
+
 
             primaryStage.show();
         } catch (Exception e) {

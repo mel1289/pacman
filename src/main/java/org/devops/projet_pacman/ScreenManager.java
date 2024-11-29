@@ -16,7 +16,7 @@ public class ScreenManager {
         primaryStage = stage;
 
         try {
-            FXMLLoader loader = new FXMLLoader(ScreenManager.class.getResource("menu-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(ScreenManager.class.getResource("views/menu-view.fxml"));
             Parent root = loader.load();
 
             mainScene = new Scene(root);
@@ -28,11 +28,15 @@ public class ScreenManager {
     }
 
     public static void showMainScreen() {
-        setScreenContent("menu-view.fxml");
+        setScreenContent("views/menu-view.fxml");
     }
 
     public static void showLeaderboardScreen() {
-        setScreenContent("leaderboard-view.fxml");
+        setScreenContent("views/leaderboard-view.fxml");
+    }
+
+    public static void showGameScreen() {
+        setScreenContent("views/game-view.fxml");
     }
 
     public static void showPlay() {
