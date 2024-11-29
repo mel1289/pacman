@@ -40,10 +40,13 @@ public class ScreenManager {
     }
 
     public static void showPlay() {
-        setScreenContent("play-view.fxml");
+        setScreenContent("views/play-view.fxml");
     }
 
     private static void setScreenContent(String fxmlFile) {
+
+        System.out.println(fxmlFile);
+
         try {
             FXMLLoader loader = new FXMLLoader(ScreenManager.class.getResource(fxmlFile));
             Parent root = loader.load();

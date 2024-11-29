@@ -1,4 +1,4 @@
-package org.devops.projet_pacman;
+package org.devops.projet_pacman.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.devops.projet_pacman.ScreenManager;
 
 import java.awt.*;
 

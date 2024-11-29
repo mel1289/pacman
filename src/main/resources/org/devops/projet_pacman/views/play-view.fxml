@@ -8,7 +8,7 @@
 
 <?import javafx.scene.control.Button?>
 <AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            stylesheets="@styles.css" style="-fx-background-color: #000000; -fx-end-margin: 40px;" fx:controller="org.devops.projet_pacman.PlayController" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            stylesheets="@../styles.css" style="-fx-background-color: #000000; -fx-end-margin: 40px;" fx:controller="org.devops.projet_pacman.controllers.PlayController" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
 
     <VBox fx:id="centerContent" alignment="CENTER" spacing="20"

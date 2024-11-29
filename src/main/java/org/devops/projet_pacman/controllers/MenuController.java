@@ -27,7 +27,7 @@ public class MenuController {
         logo.setFitHeight(300);
         logo.setFitWidth(1000);
 
-        playButton.setOnMouseClicked(e -> ScreenManager.showGameScreen());
+        playButton.setOnMouseClicked(e -> ScreenManager.showPlay());
 
         leaderboardButton.setOnMouseClicked(e -> ScreenManager.showLeaderboardScreen());
 
