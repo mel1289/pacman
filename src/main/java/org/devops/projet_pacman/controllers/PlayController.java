@@ -6,9 +6,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.input.KeyEvent;
 import org.devops.projet_pacman.ScreenManager;
+import org.devops.projet_pacman.entities.Map;
+import org.devops.projet_pacman.entities.Pacman;
 
 import java.awt.*;
 
@@ -23,20 +27,18 @@ public class PlayController {
     @FXML
     private Button btnRetour;
 
+    private Map map;
+    private Pacman pacman;
+
     @FXML
     public void initialize() {
         logo.setImage(new Image(getClass().getResource("/org/devops/projet_pacman/images/logo.png").toExternalForm()));
-
         logo.setFitHeight(300);
         logo.setFitWidth(1000);
 
         btnRetour.setOnAction(e -> ScreenManager.showMainScreen());
 
-        showGame();
-    }
-
-    public void showGame() {
-        String[] map = {
+        String[] base_map = {
                 "/////////////////////",
                 "/ooooooooo/ooooooooo/",
                 "/O///o///o/o///o///O/",
@@ -61,48 +63,94 @@ public class PlayController {
                 "/////////////////////"
         };
 
-        int rows = map.length;
-        // System.out.println("Rows : " + rows);
-        int cols = map[0].length();
-        // System.out.println("Cols : " + cols);
+        map = new Map(base_map);
+        pacman = new Pacman(0, 0); // Position initiale de Pac-Man
 
-        // Créer un Canvas
-        double canvasWidth = 800; // Largeur souhaitée
-        double canvasHeight = 600; // Hauteur souhaitée
+        updateMap();
+        gamePane.setOnKeyPressed(this::handleKeyPress);
+        gamePane.setFocusTraversable(true);
+    }
 
-        double screenX = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-        double screenY = Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2;
+    public void updateMap() {
+        int height = map.getHeight();
+        int width = map.getWidth();
+
+        double canvasWidth = 700;
+        double canvasHeight = 600;
 
         Canvas canvas = new Canvas(canvasWidth, canvasHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        // Calculer la taille de chaque carré
-        double cellOffsetWidth = (canvasWidth + screenX) / 2;
-        System.out.println(canvasHeight + " + " + screenX + " / 2 = " + cellOffsetWidth);
+        double cellWidth = canvasWidth / width;
+        double cellHeight = canvasHeight / height;
 
-        double cellSizeWidth = canvasWidth / cols;
-        double cellSizeHeight = canvasHeight / rows;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                char tile = map.getTile(y, x);
+                double posX = x * cellWidth;
+                double posY = y * cellHeight;
 
-        // Dessiner la carte
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
-                char bloc = map[y].charAt(x);
-                if (bloc == '/') {
-                    // Dessiner un mur
-                    gc.setFill(Color.BLUE); // Couleur des murs
-                    double posX = x * cellSizeWidth;
-                    double posY = y * cellSizeHeight;
-                    System.out.println("Pos x = " + posX + "Pos y = " + posY);
-                    System.out.println("Taille bloc x = " + cellSizeWidth + " y = " + cellSizeHeight);
-                    gc.fillRect(posX, posY, cellSizeWidth, cellSizeHeight);
+                switch (tile) {
+                    case '/':
+                        gc.setFill(Color.BLUE);
+                        gc.fillRect(posX, posY, cellWidth, cellHeight);
+                        break;
+                    case 'o':
+                        double dotWidth = cellWidth / 4;
+                        double dotHeight = cellHeight / 4;
+                        gc.setFill(Color.WHITE);
+                        gc.fillOval(posX + (cellWidth / 2) - (dotWidth / 2), posY + (cellHeight / 2) - (dotHeight / 2), dotWidth, dotHeight);
+                        break;
+                    case 'O':
+                        double bigDotWidth = cellWidth / 2;
+                        double bigDotHeight = cellHeight / 2;
+                        gc.setFill(Color.WHITE);
+                        gc.fillOval(posX + (cellWidth / 2) - (bigDotWidth / 2), posY + (cellHeight / 2) - (bigDotHeight / 2), bigDotWidth, bigDotHeight);
+                        break;
+                    case 'P':
+                        double pacmanWidth = cellWidth;
+                        double pacmanHeight = cellHeight;
+                        gc.setFill(Color.YELLOW);
+                        gc.fillOval(posX + (cellWidth / 2) - (pacmanWidth / 2), posY + (cellHeight / 2) - (pacmanHeight / 2), pacmanWidth, pacmanHeight);
+                        pacman.setPosX(x);
+                        pacman.setPosY(y);
+                        break;
                 }
             }
         }
-        canvas.setLayoutX(screenX - cellOffsetWidth);
 
-        // Ajouter le Canvas au gamePane
+        double screenX = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+        double canvasOffsetWidth = screenX - ((canvasWidth + screenX) / 2);
+        canvas.setLayoutX(canvasOffsetWidth);
+
         gamePane.getChildren().clear();
         gamePane.getChildren().add(canvas);
+    }
 
+    private void handleKeyPress(KeyEvent event) {
+        int newX = pacman.getPosX();
+        int newY = pacman.getPosY();
+        int oldX = pacman.getPosX();
+        int oldY = pacman.getPosY();
+
+        KeyCode code = event.getCode();
+
+        switch (code) {
+            case UP -> newY -= 1;
+            case DOWN -> newY += 1;
+            case LEFT -> newX -= 1;
+            case RIGHT -> newX += 1;
+        }
+
+        if (map.isWalkable(newY, newX)) {
+            switch (code) {
+                case UP -> pacman.moveUp(map);
+                case DOWN -> pacman.moveDown(map);
+                case LEFT -> pacman.moveLeft(map);
+                case RIGHT -> pacman.moveRight(map);
+            }
+            map.updateTile(oldY, oldX, 'S');
+        }
+        updateMap();
     }
 }
