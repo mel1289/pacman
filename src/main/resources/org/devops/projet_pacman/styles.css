@@ -1,13 +1,13 @@
 @font-face {
-    font-family: "PacmanFont";
-    src: url("fonts/pacman-font.ttf"); /* Assurez-vous que le chemin est correct */
+    font-family: 'Emulogic';
+    src: url('fonts/Emulogic-zrEw.ttf');
 }
 
 .root {
     -fx-background-color: linear-gradient(to bottom, rgba(15, 15, 15, 0.95), rgba(26, 26, 26, 0.95)); /* Fond noir avec dégradé */
-    -fx-font-family: "PacmanFont"; /* Police Pacman pour tout le projet */
-    -fx-pref-height: 100%; /* Remplit toute la hauteur */
-    -fx-pref-width: 100%; /* Remplit toute la largeur */
+    -fx-font-family: "Emulogic";
+    -fx-pref-height: 100%;
+    -fx-pref-width: 100%;
 }
 
 .menu-div {
@@ -25,17 +25,28 @@
     -fx-transition: all 0.3s ease-in-out;
 }
 
-/* Texte futuristique */
 .menu-text {
-    -fx-font-size: 16px; /* Taille du texte dépendante de la largeur de la fenêtre */
+    -fx-font-size: 10px; /* Taille du texte dépendante de la largeur de la fenêtre */
     -fx-font-weight: bold;
     -fx-fill: #FFFFFF; /* Texte blanc */
 }
 
 .menu-title {
-    -fx-font-size: 28px;
+    -fx-font-size: 10px;
     -fx-font-weight: bold;
     -fx-fill: #FFFFFF; /* Texte blanc */
+}
+
+.score-text {
+    -fx-font-size: 34px;
+    -fx-fill: #FFD700;
+    -fx-effect: dropshadow(gaussian, #FFD700, 1, 0.8, 0, 0);
+}
+
+.life-text {
+    -fx-font-size: 34px;
+    -fx-fill: #22ff00;
+    -fx-effect: dropshadow(gaussian, #22ff00, 1, 0.8, 0, 0);
 }
 
 /* Effet hover (survol) pour la bordure */
