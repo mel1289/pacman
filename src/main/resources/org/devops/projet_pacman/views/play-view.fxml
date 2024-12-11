@@ -19,11 +19,16 @@
             <Text fx:id="textJouer" text="Jouer" styleClass="futuristic-text" />
         </StackPane>
 
-        <StackPane>
-            <Pane fx:id="gamePane" style="-fx-background-color: #000000"
-                  AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50"
-                  AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"/>
-        </StackPane>
+        <Pane fx:id="gamePane" style="-fx-background-color: #000000"
+              AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50"
+              AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
+            <ImageView fx:id="pacmanImage" fitWidth="50" fitHeight="50">
+                <image>
+                    <Image url="@../images/pacman_opened.png" />
+                </image>
+            </ImageView>
+        </Pane>
+
 
         <Button fx:id="btnRetour" text="Retour" styleClass="futuristic-button" />
     </VBox>
