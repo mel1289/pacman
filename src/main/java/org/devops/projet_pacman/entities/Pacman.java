@@ -35,6 +35,10 @@ public class Pacman {
         this.posY = posY;
     }
 
+    public void setDirection(char direction) {
+        this.direction = direction;
+    }
+
     public int getScore() {
         return score;
     }
@@ -62,7 +66,9 @@ public class Pacman {
             }
         }
 
-        if (map.isValidPosition(newY, newX) && map.isWalkable(newY, newX)) {
+        setDirection(direction);
+
+        if (map.isValidPosition(newY, newX)) {
             this.direction = direction;
             posX = newX;
             posY = newY;
@@ -70,6 +76,7 @@ public class Pacman {
 
             collectPellet(tile);
             map.updateTile(posY, posX, 'P');
+
         }
     }
 

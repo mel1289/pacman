@@ -69,6 +69,7 @@ public class PlayController {
         updateMap();
         gamePane.setOnKeyPressed(this::handleKeyPress);
         gamePane.setFocusTraversable(true);
+        gamePane.requestFocus();
     }
 
     public void updateMap() {
@@ -135,6 +136,8 @@ public class PlayController {
 
         KeyCode code = event.getCode();
 
+        System.out.println(code);
+
         switch (code) {
             case UP -> newY -= 1;
             case DOWN -> newY += 1;
@@ -150,7 +153,9 @@ public class PlayController {
                 case RIGHT -> pacman.moveRight(map);
             }
             map.updateTile(oldY, oldX, 'S');
+            map.updateTile(newY, newX, 'P');
         }
+        event.consume();
         updateMap();
     }
 }

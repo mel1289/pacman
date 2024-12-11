@@ -34,6 +34,9 @@ public class Map {
         if (isValidPosition(y, x)) {
             return map[y].charAt(x);
         }
+        else{
+            System.out.println("Invalid position");
+        }
         throw new IndexOutOfBoundsException("Invalid position.");
     }
 
@@ -43,7 +46,7 @@ public class Map {
 
     public boolean isWalkable(int y, int x) {
         char tile = getTile(y, x);
-        System.out.println("Checking tile at y = " + y + ", x = " + x + " -> tile = '" + tile + "'");
+        //System.out.println("Checking tile at y = " + y + ", x = " + x + " -> tile = '" + tile + "'");
         return tile != '/';
     }
 
@@ -58,6 +61,12 @@ public class Map {
     }
 
     public boolean isValidPosition(int y, int x) {
-        return y >= 0 && y < height && x >= 0 && x < width;
+        if (y >= 0 && y < height && x >= 0 && x < width) {
+            return true;
+        }
+        else {
+            System.out.println("Invalid position");
+            return false;
+        }
     }
 }
