@@ -1,6 +1,7 @@
 package org.devops.projet_pacman.controllers;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -8,8 +9,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
 import org.devops.projet_pacman.ScreenManager;
 import org.devops.projet_pacman.entities.Map;
 import org.devops.projet_pacman.entities.Pacman;
@@ -25,18 +29,19 @@ public class PlayController {
     private Pane gamePane; // Un Pane dans votre fichier FXML pour afficher le jeu.
 
     @FXML
-    private Button btnRetour;
+    private StackPane btnRetour;
+
+    @FXML
+    private Text scoreText;
 
     private Map map;
     private Pacman pacman;
 
     @FXML
     public void initialize() {
-        logo.setImage(new Image(getClass().getResource("/org/devops/projet_pacman/images/logo.png").toExternalForm()));
-        logo.setFitHeight(300);
-        logo.setFitWidth(1000);
+        btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
 
-        btnRetour.setOnAction(e -> ScreenManager.showMainScreen());
+        VBox.setMargin(btnRetour, new Insets(70, 0, 0, 0));
 
         String[] base_map = {
                 "/////////////////////",
@@ -67,6 +72,7 @@ public class PlayController {
         pacman = new Pacman(0, 0); // Position initiale de Pac-Man
 
         updateMap();
+
         gamePane.setOnKeyPressed(this::handleKeyPress);
         gamePane.setFocusTraversable(true);
         gamePane.requestFocus();
@@ -81,6 +87,8 @@ public class PlayController {
 
         Canvas canvas = new Canvas(canvasWidth, canvasHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        scoreText.setText(String.valueOf(pacman.getScore()));
 
         double cellWidth = canvasWidth / width;
         double cellHeight = canvasHeight / height;
@@ -135,8 +143,6 @@ public class PlayController {
         int oldY = pacman.getPosY();
 
         KeyCode code = event.getCode();
-
-        System.out.println(code);
 
         switch (code) {
             case UP -> newY -= 1;
