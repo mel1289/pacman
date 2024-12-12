@@ -9,7 +9,6 @@ public class Pacman {
     private int score;
     private boolean isPoweredUp;
     private int powerUpDuration;
-    private int life;
 
     public Pacman(int posX, int posY) {
         this.posX = posX;
@@ -18,7 +17,6 @@ public class Pacman {
         this.score = 0;
         this.isPoweredUp = false;
         this.powerUpDuration = 0;
-        this.life = 3;
     }
 
     public int getPosX() {

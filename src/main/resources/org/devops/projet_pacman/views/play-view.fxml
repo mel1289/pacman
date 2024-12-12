@@ -24,16 +24,6 @@
     <VBox fx:id="centerContent" alignment="CENTER" spacing="20"
           AnchorPane.topAnchor="100" AnchorPane.bottomAnchor="60" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
-        <Pane fx:id="gamePane" style="-fx-background-color: #000000"
-              AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50"
-              AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
-            <ImageView fx:id="pacmanImage" fitWidth="50" fitHeight="50">
-                <image>
-                    <Image url="@../images/pacman_opened.png" />
-                </image>
-            </ImageView>
-        </Pane>
-
         <StackPane alignment="CENTER">
             <Pane fx:id="gamePane" style="-fx-background-color: #000000;" />
         </StackPane>
