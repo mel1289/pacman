@@ -59,6 +59,9 @@ public class PlayController {
         pacmanImage.setLayoutX(gamePane.getPrefWidth() / 2);
         pacmanImage.setLayoutY(gamePane.getPrefHeight() / 2);
 
+        pacmanImage.toFront();
+        gamePane.toBack();
+
         btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
 
         VBox.setMargin(btnRetour, new Insets(70, 0, 0, 0));
@@ -190,6 +193,8 @@ public class PlayController {
 
         gamePane.getChildren().clear();
         gamePane.getChildren().add(canvas);
+
+        gamePane.getChildren().add(pacmanImage);
     }
 
     private void startMoving() {
