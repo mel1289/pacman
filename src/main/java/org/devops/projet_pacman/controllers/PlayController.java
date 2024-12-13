@@ -9,12 +9,15 @@ import javafx.scene.control.Button;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import org.devops.projet_pacman.MenuApplication;
 import org.devops.projet_pacman.ScreenManager;
 import org.devops.projet_pacman.entities.Map;
 import org.devops.projet_pacman.entities.Pacman;
@@ -49,6 +52,8 @@ public class PlayController {
     private static final double PACMAN_SPEED = 0.2;  // Ralentir Pacman, déplacer toutes les 0.5 secondes
     private double lastMoveTime = 0;  // Temps depuis le dernier mouvement
 
+    private MenuApplication menuApplication;
+
     // AnimationTimer pour le mouvement continu
 
     @FXML
@@ -56,11 +61,8 @@ public class PlayController {
         btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
 
         pacmanImage.setImage(pacmanClosed);
-        pacmanImage.setLayoutX(gamePane.getPrefWidth() / 2);
-        pacmanImage.setLayoutY(gamePane.getPrefHeight() / 2);
-
-        pacmanImage.toFront();
-        gamePane.toBack();
+        //pacmanImage.setLayoutX(gamePane.getPrefWidth() / 2);
+        //pacmanImage.setLayoutY(gamePane.getPrefHeight() / 2);
 
         btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
 
@@ -105,7 +107,9 @@ public class PlayController {
         int height = map.getHeight();
         int width = map.getWidth();
 
-        double canvasWidth = 700;
+        System.out.println(height + " " + width);
+
+        double canvasWidth = 573;
         double canvasHeight = 600;
 
         Canvas canvas = new Canvas(canvasWidth, canvasHeight);
@@ -121,6 +125,8 @@ public class PlayController {
                 char tile = map.getTile(y, x);
                 double posX = x * cellWidth;
                 double posY = y * cellHeight;
+
+                // System.out.println(x + " * " + cellWidth + " = " + posX);
 
                 switch (tile) {
                     case '/':
@@ -142,14 +148,25 @@ public class PlayController {
                     case 'P':
                         double pacmanWidth = cellWidth;
                         double pacmanHeight = cellHeight;
-                        posX = posX + (cellWidth / 2) - (pacmanWidth / 2);
-                        posY = posY + (cellHeight / 2) - (pacmanHeight / 2);
+
+                        pacmanImage.setFitWidth(pacmanWidth);
+                        pacmanImage.setFitHeight(pacmanHeight);
+
+                        double paneWidth = Toolkit.getDefaultToolkit().getScreenSize().width; //gamePane.getWidth();
+
+                        System.out.println(posX + " + (" + paneWidth + " - " + canvasWidth + ") / 2" + " = ");
+
+                        posX = posX + ((paneWidth - canvasWidth) / 2);
+
+                        System.out.println(posX);
+                        System.out.println(" ");
+
+                        //posY = posY + (cellHeight / 2) - (pacmanHeight / 2);
 
                         pacman.setPosX(x);
                         pacman.setPosY(y);
 
                         char directionPacman = pacman.getDirection();
-                        System.out.println(directionPacman);
 
                         isMouseOpen = !isMouseOpen; // Alterne entre ouvert et fermé
                         if (isMouseOpen) {
