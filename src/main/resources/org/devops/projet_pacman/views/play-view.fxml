@@ -12,7 +12,7 @@
             fx:controller="org.devops.projet_pacman.controllers.PlayController"
             style="-fx-background-color: #000000;">
 
-    <HBox alignment="CENTER" spacing="40" AnchorPane.topAnchor="80" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+    <HBox alignment="CENTER" spacing="40" AnchorPane.topAnchor="60" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
         <VBox alignment="CENTER">
             <Text text="SCORE" style="-fx-fill: #ffffff; -fx-font-size: 24px; -fx-font-weight: bold;" />
             <Text fx:id="scoreText" styleClass="score-text" text="0" />
@@ -27,14 +27,7 @@
           AnchorPane.topAnchor="100" AnchorPane.bottomAnchor="60" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
         <Pane fx:id="gamePane">
-            <!-- Pac-Man -->
-            <ImageView fx:id="pacmanImage">
-                <image>
-                    <Image url="@../images/pacman_opened.png" />
-                </image>
-                <fitWidth>50</fitWidth>
-                <fitHeight>50</fitHeight>
-            </ImageView>
+
         </Pane>
 
         <StackPane fx:id="btnRetour" styleClass="menu-div" alignment="CENTER">

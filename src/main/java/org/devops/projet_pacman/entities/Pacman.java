@@ -1,5 +1,9 @@
 package org.devops.projet_pacman.entities;
 
+import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 public class Pacman {
 
     private int posX;
@@ -9,14 +13,19 @@ public class Pacman {
     private int score;
     private boolean isPoweredUp;
     private int powerUpDuration;
+    private int life;
 
-    public Pacman(int posX, int posY) {
+    private ImageView image;
+
+    public Pacman(int posX, int posY, String pathPacmanSkin) {
         this.posX = posX;
         this.posY = posY;
         this.direction = 'r';
         this.score = 0;
         this.isPoweredUp = false;
         this.powerUpDuration = 0;
+        this.life = 3;
+        this.image = new ImageView(new Image(getClass().getResourceAsStream(pathPacmanSkin)));
     }
 
     public int getPosX() {
@@ -51,51 +60,6 @@ public class Pacman {
         return direction;
     }
 
-    public void move(char direction, Map map) {
-        int newY = posY;
-        int newX = posX;
-
-        switch (direction) {
-            case 'u' -> newY--;
-            case 'd' -> newY++;
-            case 'l' -> newX--;
-            case 'r' -> newX++;
-            default -> {
-                System.out.println("Invalid direction!");
-                return;
-            }
-        }
-
-        setDirection(direction);
-
-        if (map.isValidPosition(newY, newX)) {
-            this.direction = direction;
-            posX = newX;
-            posY = newY;
-            char tile = map.getTile(posY, posX);
-
-            collectPellet(tile);
-            map.updateTile(posY, posX, 'P');
-
-        }
-    }
-
-    public void moveUp(Map map) {
-        move('u', map);
-    }
-
-    public void moveDown(Map map) {
-        move('d', map);
-    }
-
-    public void moveLeft(Map map) {
-        move('l', map);
-    }
-
-    public void moveRight(Map map) {
-        move('r', map);
-    }
-
     public void collectPellet(char tile) {
         if (tile == 'o') {
             score += 10;
@@ -119,7 +83,11 @@ public class Pacman {
         }
     }
 
-    public boolean checkCollision(int ghostY, int ghostX) {
-        return posX == ghostX && posY == ghostY;
+    public ImageView getImage() {
+        return image;
+    }
+
+    public void setImage(ImageView image) {
+        this.image = image;
     }
 }

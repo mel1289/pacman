@@ -17,11 +17,11 @@ public class MenuApplication extends Application {
             primaryStage.setHeight(Toolkit.getDefaultToolkit().getScreenSize().height);
             primaryStage.setWidth(Toolkit.getDefaultToolkit().getScreenSize().width);
 
-            //primaryStage.setFullScreen(true);
-            //primaryStage.setResizable(false);
+            primaryStage.setFullScreen(true);
+            primaryStage.setResizable(false);
 
-            //primaryStage.fullScreenExitHintProperty().setValue("");
-            //primaryStage.setFullScreenExitKeyCombination(null);
+            primaryStage.fullScreenExitHintProperty().setValue("");
+            primaryStage.setFullScreenExitKeyCombination(null);
 
             primaryStage.fullScreenProperty().addListener((obs, wasFullScreen, isFullScreen) -> {
                 if (!isFullScreen) {
