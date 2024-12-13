@@ -22,8 +22,11 @@ import org.devops.projet_pacman.ScreenManager;
 import org.devops.projet_pacman.entities.Ghost;
 import org.devops.projet_pacman.entities.Map;
 import org.devops.projet_pacman.entities.Pacman;
-
+import org.devops.projet_pacman.entities.Pellet;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class PlayController {
@@ -36,6 +39,7 @@ public class PlayController {
 
     @FXML
     private Text scoreText;
+
 
     private boolean isMouseOpen = true;
     private final Image pacmanOpen = new Image(getClass().getResource("/org/devops/projet_pacman/images/pacman_opened.png").toExternalForm());
@@ -56,8 +60,6 @@ public class PlayController {
     private double lastMoveTime = 0;  // Temps depuis le dernier mouvement
 
     private MenuApplication menuApplication;
-
-    // AnimationTimer pour le mouvement continu
 
     @FXML
     public void initialize() {
@@ -133,94 +135,86 @@ public class PlayController {
                 double posX = x * cellWidth;
                 double posY = y * cellHeight;
 
+                boolean isPelletInMap = map.containsPelletPosition(x, y);
+                boolean isBigPelletInMap = map.containsBigPelletPosition(x, y);
+
                 // System.out.println(x + " * " + cellWidth + " = " + posX);
 
-                switch (tile) {
-                    case '/':
-                        gc.setFill(Color.BLUE);
-                        gc.fillRect(posX, posY, cellWidth, cellHeight);
-                        break;
-                    case 'o':
-                        double dotWidth = cellWidth / 4;
-                        double dotHeight = cellHeight / 4;
-                        gc.setFill(Color.WHITE);
-                        gc.fillOval(posX + (cellWidth / 2) - (dotWidth / 2), posY + (cellHeight / 2) - (dotHeight / 2), dotWidth, dotHeight);
-                        break;
-                    case 'O':
-                        double bigDotWidth = cellWidth / 2;
-                        double bigDotHeight = cellHeight / 2;
-                        gc.setFill(Color.WHITE);
-                        gc.fillOval(posX + (cellWidth / 2) - (bigDotWidth / 2), posY + (cellHeight / 2) - (bigDotHeight / 2), bigDotWidth, bigDotHeight);
-                        break;
-                    case 'b':
-                        double ghostWidth = cellWidth;
-                        double ghostHeight = cellHeight;
+                if (tile == '/') {
+                    gc.setFill(Color.BLUE);
+                    gc.fillRect(posX, posY, cellWidth, cellHeight);
+                } if (tile == 'o' || isPelletInMap) {
+                    double dotWidth = cellWidth / 4;
+                    double dotHeight = cellHeight / 4;
+                    gc.setFill(Color.WHITE);
+                    gc.fillOval(posX + (cellWidth / 2) - (dotWidth / 2), posY + (cellHeight / 2) - (dotHeight / 2), dotWidth, dotHeight);
+                    map.addPelletPosition(x, y);
+                } if (tile == 'O' || isBigPelletInMap) {
+                    double bigDotWidth = cellWidth / 2;
+                    double bigDotHeight = cellHeight / 2;
+                    gc.setFill(Color.WHITE);
+                    gc.fillOval(posX + (cellWidth / 2) - (bigDotWidth / 2), posY + (cellHeight / 2) - (bigDotHeight / 2), bigDotWidth, bigDotHeight);
+                    map.addBigPelletPosition(x, y);
+                } if (tile == 'b') {
+                    double ghostWidth = cellWidth;
+                    double ghostHeight = cellHeight;
 
-                        ghost.getImage().setFitWidth(ghostWidth);
-                        ghost.getImage().setFitHeight(ghostHeight);
+                    ghost.getImage().setFitWidth(ghostWidth);
+                    ghost.getImage().setFitHeight(ghostHeight);
 
-                        double paneWidth2 = Toolkit.getDefaultToolkit().getScreenSize().width; //gamePane.getWidth();
+                    double paneWidth2 = Toolkit.getDefaultToolkit().getScreenSize().width; //gamePane.getWidth();
 
-                        posX = posX + ((paneWidth2 - canvasWidth) / 2);
+                    posX = posX + ((paneWidth2 - canvasWidth) / 2);
 
-                        ghost.setPosX(x);
-                        ghost.setPosY(y);
+                    ghost.setPosX(x);
+                    ghost.setPosY(y);
 
-                        ghost.getImage().setVisible(true);
-                        ghost.getImage().setLayoutX(posX);
-                        ghost.getImage().setLayoutY(posY);
-                        break;
-                    case 'P':
-                        double pacmanWidth = cellWidth;
-                        double pacmanHeight = cellHeight;
+                    ghost.getImage().setVisible(true);
+                    ghost.getImage().setLayoutX(posX);
+                    ghost.getImage().setLayoutY(posY);
+                } if (tile == 'P') {
+                    double pacmanWidth = cellWidth;
+                    double pacmanHeight = cellHeight;
 
-                        pacman.getImage().setFitWidth(pacmanWidth);
-                        pacman.getImage().setFitHeight(pacmanHeight);
+                    pacman.getImage().setFitWidth(pacmanWidth);
+                    pacman.getImage().setFitHeight(pacmanHeight);
 
-                        double paneWidth = Toolkit.getDefaultToolkit().getScreenSize().width; //gamePane.getWidth();
+                    double paneWidth = Toolkit.getDefaultToolkit().getScreenSize().width; //gamePane.getWidth();
 
-                        posX = posX + ((paneWidth - canvasWidth) / 2);
+                    posX = posX + ((paneWidth - canvasWidth) / 2);
 
-                        //posY = posY + (cellHeight / 2) - (pacmanHeight / 2);
+                    pacman.setPosX(x);
+                    pacman.setPosY(y);
 
-                        pacman.setPosX(x);
-                        pacman.setPosY(y);
+                    isMouseOpen = !isMouseOpen; // Alterne entre ouvert et fermé
+                    if (isMouseOpen) {
+                        pacman.getImage().setImage(pacmanOpen);  // Pacman ouvert
+                    } else {
+                        pacman.getImage().setImage(pacmanClosed);  // Pacman fermé
+                    }
 
-                        isMouseOpen = !isMouseOpen; // Alterne entre ouvert et fermé
-                        if (isMouseOpen) {
-                            pacman.getImage().setImage(pacmanOpen);  // Pacman ouvert
-                        } else {
-                            pacman.getImage().setImage(pacmanClosed);  // Pacman fermé
-                        }
+                    char directionPacman = pacman.getDirection();
 
-                        char directionPacman = pacman.getDirection();
+                    // Met à jour l'orientation de Pacman en fonction de la direction
+                    if (directionPacman == 'r') {  // Droite
+                        pacman.getImage().setRotate(0);        // Rotation à 0° (regarde vers la droite)
+                        pacman.getImage().setScaleX(1);        // Normalement orienté
+                    } else if (directionPacman == 'l') {  // Gauche
+                        pacman.getImage().setRotate(360);      // Rotation à 180° (regarde vers la gauche)
+                        pacman.getImage().setScaleX(-1);       // Inverser horizontalement
+                    } else if (directionPacman == 'd') {  // Bas
+                        pacman.getImage().setRotate(90);       // Rotation à 90° (regarde vers le bas)
+                        pacman.getImage().setScaleX(1);        // Normalement orienté
+                    } else if (directionPacman == 'u') {  // Haut
+                        pacman.getImage().setRotate(270);      // Rotation à 270° (regarde vers le haut)
+                        pacman.getImage().setScaleX(1);        // Normalement orienté
+                    }
 
-                        // Met à jour l'orientation de Pacman en fonction de la direction
-                        switch (directionPacman) {
-                            case 'r':  // Droite
-                                pacman.getImage().setRotate(0);        // Rotation à 0° (regarde vers la droite)
-                                pacman.getImage().setScaleX(1);        // Normalement orienté
-                                break;
-                            case 'l':  // Gauche
-                                pacman.getImage().setRotate(360);      // Rotation à 180° (regarde vers la gauche)
-                                pacman.getImage().setScaleX(-1);       // Inverser horizontalement
-                                break;
-                            case 'd':  // Bas
-                                pacman.getImage().setRotate(90);       // Rotation à 90° (regarde vers le bas)
-                                pacman.getImage().setScaleX(1);        // Normalement orienté
-                                break;
-                            case 'u':  // Haut
-                                pacman.getImage().setRotate(270);      // Rotation à 270° (regarde vers le haut)
-                                pacman.getImage().setScaleX(1);        // Normalement orienté
-                                break;
-                        }
-
-                        pacman.getImage().setVisible(true);
-                        pacman.getImage().setLayoutX(posX);
-                        pacman.getImage().setLayoutY(posY);
-
-                        //gc.drawImage(pacmanImage.getImage(), posX, posY, pacmanWidth, pacmanHeight);
+                    pacman.getImage().setVisible(true);
+                    pacman.getImage().setLayoutX(posX);
+                    pacman.getImage().setLayoutY(posY);
                 }
+
             }
         }
 
@@ -296,14 +290,14 @@ public class PlayController {
                 ghost.setPosX(newX);
                 ghost.setPosY(newY);
 
-                System.out.println(ghost.getPosX() + " / " + ghost.getPosY());
+                // System.out.println(ghost.getPosX() + " / " + ghost.getPosY());
 
                 // Mettre à jour la nouvelle case du fantôme avec 'b'
                 map.updateTile(newY, newX, 'b');
 
-                System.out.println("============");
-                map.displayMap();
-                System.out.println("============");
+                // System.out.println("============");
+                // map.displayMap();
+                // System.out.println("============");
             }
         }
     }
@@ -338,7 +332,9 @@ public class PlayController {
             pacman.setPosX(newX);
             pacman.setPosY(newY);
 
-            // Met à jour la carte
+            map.removePelletPosition(newX, newY);
+            map.removeBigPelletPosition(newX, newY);
+
             pacman.collectPellet(map.getTile(newY, newX));
             map.updateTile(newY, newX, 'P');
         } else {
