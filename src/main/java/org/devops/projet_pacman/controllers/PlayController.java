@@ -249,6 +249,7 @@ public class PlayController {
                 if (elapsedTime - lastMoveTime >= PACMAN_SPEED) {
                     movePacman();
                     moveGhost();
+                    updateMap();
                     lastMoveTime = elapsedTime;  // Mettre à jour le temps du dernier mouvement
                 }
             }
@@ -257,61 +258,54 @@ public class PlayController {
     }
 
     private void moveGhost() {
-        int newX = ghost.getPosX();
-        int newY = ghost.getPosY();
-
-        //System.out.println(map.getTile(newX, newY));
-
         Random rand = new Random();
-
         char[] directions = {'U', 'D', 'R', 'L'};
 
-        this.ghostDirection = directions[rand.nextInt(directions.length)];
-
-        switch (this.ghostDirection) {
-            case 'U':
-                newY -= 1;
-                break;
-            case 'D':
-                newY += 1;
-                break;
-            case 'L':
-                newX -= 1;
-                break;
-            case 'R':
-                newX += 1;
-                break;
-        }
-
-        //System.out.println("Nouveau : " + map.getTile(newX, newY) + "\n\n");
-
-        if (map.isWalkable(newY, newX)) {
-
-            if (this.ghostDirection == 'L' || this.ghostDirection == 'U') {
-                System.out.println("zeeeeee");
-            }
-
-            map.updateTile(ghost.getPosY(), ghost.getPosX(), map.getTile(ghost.getPosY(), ghost.getPosX()) != 'b' ? map.getTile(ghost.getPosY(), ghost.getPosX()) : 'S');
-
-            if (map.getTile(newY, newX) == 'b') {
-
-            }
-
-            ghost.setPosX(newX);
-            ghost.setPosY(newY);
-
-            System.out.println(ghost.getPosX() + " / " + ghost.getPosY());
-
-            map.updateTile(newY, newX, 'b');
-
-            System.out.println("============");
-            map.displayMap();
-            System.out.println("============");
-
-            updateMap();
-        } else {
+        // Répéter tant que la case suivante n'est pas walkable
+        boolean moved = false;
+        while (!moved) {
+            int newX = ghost.getPosX();
+            int newY = ghost.getPosY();
             this.ghostDirection = directions[rand.nextInt(directions.length)];
-       }
+
+            // Calculer la nouvelle position en fonction de la direction
+            switch (this.ghostDirection) {
+                case 'U':
+                    newY -= 1;
+                    break;
+                case 'D':
+                    newY += 1;
+                    break;
+                case 'L':
+                    newX -= 1;
+                    break;
+                case 'R':
+                    newX += 1;
+                    break;
+            }
+
+            // Vérifier si la case est walkable
+            if (map.isWalkable(newY, newX)) {
+                // Si oui, on marque le mouvement comme effectué
+                moved = true;
+
+                // Mise à jour de l'ancienne case du fantôme
+                map.updateTile(ghost.getPosY(), ghost.getPosX(), map.getTile(ghost.getPosY(), ghost.getPosX()) != 'b' ? map.getTile(ghost.getPosY(), ghost.getPosX()) : 'S');
+
+                // Déplacement du fantôme
+                ghost.setPosX(newX);
+                ghost.setPosY(newY);
+
+                System.out.println(ghost.getPosX() + " / " + ghost.getPosY());
+
+                // Mettre à jour la nouvelle case du fantôme avec 'b'
+                map.updateTile(newY, newX, 'b');
+
+                System.out.println("============");
+                map.displayMap();
+                System.out.println("============");
+            }
+        }
     }
 
     private void movePacman() {
@@ -346,8 +340,7 @@ public class PlayController {
 
             // Met à jour la carte
             pacman.collectPellet(map.getTile(newY, newX));
-            map.updateTile(newY, newX, 'P');  // 'P' pour Pacman
-            updateMap();  // Rafraîchir l'affichage
+            map.updateTile(newY, newX, 'P');
         } else {
             movementTimer.stop();
         }
@@ -369,7 +362,6 @@ public class PlayController {
         }*/
 
             event.consume();  // Empêche la propagation de l'événement
-            updateMap();
         }
     }
 }
