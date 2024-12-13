@@ -1,19 +1,23 @@
 package org.devops.projet_pacman.controllers;
 
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.image.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import org.devops.projet_pacman.MenuApplication;
 import org.devops.projet_pacman.ScreenManager;
 import org.devops.projet_pacman.entities.Map;
 import org.devops.projet_pacman.entities.Pacman;
@@ -21,9 +25,6 @@ import org.devops.projet_pacman.entities.Pacman;
 import java.awt.*;
 
 public class PlayController {
-
-    @FXML
-    private ImageView logo;
 
     @FXML
     private Pane gamePane; // Un Pane dans votre fichier FXML pour afficher le jeu.
@@ -34,11 +35,35 @@ public class PlayController {
     @FXML
     private Text scoreText;
 
+    @FXML
+    private ImageView pacmanImage;
+
+    private boolean isMouseOpen = true;
+    private final Image pacmanOpen = new Image(getClass().getResource("/org/devops/projet_pacman/images/pacman_opened.png").toExternalForm());
+    private final Image pacmanClosed = new Image(getClass().getResource("/org/devops/projet_pacman/images/pacman_closed.png").toExternalForm());
+
+    private KeyCode currentDirection = null;  // Direction actuelle de Pacman
+    private AnimationTimer movementTimer = null;  // Timer pour gérer le mouvement continu
+    private boolean isMoving = false;  // Indicateur si Pacman est en mouvement
+
     private Map map;
     private Pacman pacman;
 
+    private static final double PACMAN_SPEED = 0.2;  // Ralentir Pacman, déplacer toutes les 0.5 secondes
+    private double lastMoveTime = 0;  // Temps depuis le dernier mouvement
+
+    private MenuApplication menuApplication;
+
+    // AnimationTimer pour le mouvement continu
+
     @FXML
     public void initialize() {
+        btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
+
+        pacmanImage.setImage(pacmanClosed);
+        //pacmanImage.setLayoutX(gamePane.getPrefWidth() / 2);
+        //pacmanImage.setLayoutY(gamePane.getPrefHeight() / 2);
+
         btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
 
         VBox.setMargin(btnRetour, new Insets(70, 0, 0, 0));
@@ -82,7 +107,9 @@ public class PlayController {
         int height = map.getHeight();
         int width = map.getWidth();
 
-        double canvasWidth = 700;
+        System.out.println(height + " " + width);
+
+        double canvasWidth = 573;
         double canvasHeight = 600;
 
         Canvas canvas = new Canvas(canvasWidth, canvasHeight);
@@ -98,6 +125,8 @@ public class PlayController {
                 char tile = map.getTile(y, x);
                 double posX = x * cellWidth;
                 double posY = y * cellHeight;
+
+                // System.out.println(x + " * " + cellWidth + " = " + posX);
 
                 switch (tile) {
                     case '/':
@@ -119,11 +148,58 @@ public class PlayController {
                     case 'P':
                         double pacmanWidth = cellWidth;
                         double pacmanHeight = cellHeight;
-                        gc.setFill(Color.YELLOW);
-                        gc.fillOval(posX + (cellWidth / 2) - (pacmanWidth / 2), posY + (cellHeight / 2) - (pacmanHeight / 2), pacmanWidth, pacmanHeight);
+
+                        pacmanImage.setFitWidth(pacmanWidth);
+                        pacmanImage.setFitHeight(pacmanHeight);
+
+                        double paneWidth = Toolkit.getDefaultToolkit().getScreenSize().width; //gamePane.getWidth();
+
+                        System.out.println(posX + " + (" + paneWidth + " - " + canvasWidth + ") / 2" + " = ");
+
+                        posX = posX + ((paneWidth - canvasWidth) / 2);
+
+                        System.out.println(posX);
+                        System.out.println(" ");
+
+                        //posY = posY + (cellHeight / 2) - (pacmanHeight / 2);
+
                         pacman.setPosX(x);
                         pacman.setPosY(y);
-                        break;
+
+                        char directionPacman = pacman.getDirection();
+
+                        isMouseOpen = !isMouseOpen; // Alterne entre ouvert et fermé
+                        if (isMouseOpen) {
+                            pacmanImage.setImage(pacmanOpen);  // Pacman ouvert
+                        } else {
+                            pacmanImage.setImage(pacmanClosed);  // Pacman fermé
+                        }
+
+                        // Met à jour l'orientation de Pacman en fonction de la direction
+                        switch (directionPacman) {
+                            case 'r':  // Droite
+                                pacmanImage.setRotate(0);        // Rotation à 0° (regarde vers la droite)
+                                pacmanImage.setScaleX(1);        // Normalement orienté
+                                break;
+                            case 'l':  // Gauche
+                                pacmanImage.setRotate(360);      // Rotation à 180° (regarde vers la gauche)
+                                pacmanImage.setScaleX(-1);       // Inverser horizontalement
+                                break;
+                            case 'd':  // Bas
+                                pacmanImage.setRotate(90);       // Rotation à 90° (regarde vers le bas)
+                                pacmanImage.setScaleX(1);        // Normalement orienté
+                                break;
+                            case 'u':  // Haut
+                                pacmanImage.setRotate(270);      // Rotation à 270° (regarde vers le haut)
+                                pacmanImage.setScaleX(1);        // Normalement orienté
+                                break;
+                        }
+                        pacmanImage.setVisible(true);
+                        pacmanImage.setLayoutX(posX);
+                        pacmanImage.setLayoutY(posY);
+
+                        //gc.drawImage(pacmanImage.getImage(), posX, posY, pacmanWidth, pacmanHeight);
+
                 }
             }
         }
@@ -134,34 +210,87 @@ public class PlayController {
 
         gamePane.getChildren().clear();
         gamePane.getChildren().add(canvas);
+
+        gamePane.getChildren().add(pacmanImage);
+    }
+
+    private void startMoving() {
+        if (movementTimer != null) {
+            movementTimer.stop();
+        }
+
+        movementTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                double elapsedTime = now / 1e9;  // Convertir le temps en secondes
+
+                // Vérifier si suffisamment de temps s'est écoulé depuis le dernier mouvement
+                if (elapsedTime - lastMoveTime >= PACMAN_SPEED) {
+                    movePacman();
+                    lastMoveTime = elapsedTime;  // Mettre à jour le temps du dernier mouvement
+                }
+            }
+        };
+        movementTimer.start();
+    }
+
+    private void movePacman() {
+        int newX = pacman.getPosX();
+        int newY = pacman.getPosY();
+
+        // Calculer la nouvelle position en fonction de la direction actuelle
+        switch (currentDirection) {
+            case UP:
+                newY -= 1;
+                pacman.setDirection('u');
+                break;
+            case DOWN:
+                newY += 1;
+                pacman.setDirection('d');
+                break;
+            case LEFT:
+                newX -= 1;
+                pacman.setDirection('l');
+                break;
+            case RIGHT:
+                newX += 1;
+                pacman.setDirection('r');
+                break;
+        }
+
+        if (map.isWalkable(newY, newX)) {
+            map.updateTile(pacman.getPosY(), pacman.getPosX(), 'S');
+            // Si Pacman peut se déplacer, met à jour sa position
+            pacman.setPosX(newX);
+            pacman.setPosY(newY);
+
+            // Met à jour la carte
+            pacman.collectPellet(map.getTile(newY, newX));
+            map.updateTile(newY, newX, 'P');  // 'P' pour Pacman
+            updateMap();  // Rafraîchir l'affichage
+        } else {
+            // Si Pacman rencontre un mur, arrête le mouvement
+            movementTimer.stop();
+        }
     }
 
     private void handleKeyPress(KeyEvent event) {
-        int newX = pacman.getPosX();
-        int newY = pacman.getPosY();
-        int oldX = pacman.getPosX();
-        int oldY = pacman.getPosY();
-
         KeyCode code = event.getCode();
 
-        switch (code) {
+        if (currentDirection == null || code != currentDirection) {
+            currentDirection = code;
+
+            startMoving();
+          
+        /*switch (code) {
             case UP -> newY -= 1;
             case DOWN -> newY += 1;
             case LEFT -> newX -= 1;
             case RIGHT -> newX += 1;
-        }
+        }*/
 
-        if (map.isWalkable(newY, newX)) {
-            switch (code) {
-                case UP -> pacman.moveUp(map);
-                case DOWN -> pacman.moveDown(map);
-                case LEFT -> pacman.moveLeft(map);
-                case RIGHT -> pacman.moveRight(map);
-            }
-            map.updateTile(oldY, oldX, 'S');
-            map.updateTile(newY, newX, 'P');
+            event.consume();  // Empêche la propagation de l'événement
+            updateMap();
         }
-        event.consume();
-        updateMap();
     }
 }

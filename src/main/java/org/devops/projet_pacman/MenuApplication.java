@@ -3,7 +3,10 @@ package org.devops.projet_pacman;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.awt.*;
+
 public class MenuApplication extends Application {
+
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -11,8 +14,9 @@ public class MenuApplication extends Application {
             ScreenManager.showMainScreen();
 
             primaryStage.setTitle("PacMan Reborn");
-            primaryStage.setMinHeight(700);
-            primaryStage.setMinWidth(1000);
+            primaryStage.setHeight(Toolkit.getDefaultToolkit().getScreenSize().height);
+            primaryStage.setWidth(Toolkit.getDefaultToolkit().getScreenSize().width);
+
             //primaryStage.setFullScreen(true);
             //primaryStage.setResizable(false);
 
@@ -31,7 +35,6 @@ public class MenuApplication extends Application {
             e.printStackTrace();
         }
     }
-
     public static void main(String[] args) {
         launch();
     }
