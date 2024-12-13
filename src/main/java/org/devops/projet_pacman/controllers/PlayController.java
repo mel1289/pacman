@@ -24,9 +24,6 @@ import java.awt.*;
 public class PlayController {
 
     @FXML
-    private ImageView logo;
-
-    @FXML
     private Pane gamePane; // Un Pane dans votre fichier FXML pour afficher le jeu.
 
     @FXML
@@ -37,6 +34,7 @@ public class PlayController {
 
     @FXML
     private ImageView pacmanImage;
+
     private boolean isMouseOpen = true;
     private final Image pacmanOpen = new Image(getClass().getResource("/org/devops/projet_pacman/images/pacman_opened.png").toExternalForm());
     private final Image pacmanClosed = new Image(getClass().getResource("/org/devops/projet_pacman/images/pacman_closed.png").toExternalForm());
@@ -48,14 +46,20 @@ public class PlayController {
     private Map map;
     private Pacman pacman;
 
+    private static final double PACMAN_SPEED = 0.2;  // Ralentir Pacman, déplacer toutes les 0.5 secondes
+    private double lastMoveTime = 0;  // Temps depuis le dernier mouvement
+
+    // AnimationTimer pour le mouvement continu
+
     @FXML
     public void initialize() {
         btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
 
+        pacmanImage.setImage(pacmanClosed);
         pacmanImage.setLayoutX(gamePane.getPrefWidth() / 2);
         pacmanImage.setLayoutY(gamePane.getPrefHeight() / 2);
 
-        btnRetour.setOnAction(e -> ScreenManager.showMainScreen());
+        btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
 
         VBox.setMargin(btnRetour, new Insets(70, 0, 0, 0));
 
@@ -188,33 +192,6 @@ public class PlayController {
         gamePane.getChildren().add(canvas);
     }
 
-
-
-    private void handleKeyPress(KeyEvent event) {
-        KeyCode code = event.getCode();
-
-        // Si Pacman n'est pas déjà en mouvement ou si la direction a changé
-        if (currentDirection == null || code != currentDirection) {
-            currentDirection = code;
-
-            // Démarrer ou redémarrer le mouvement
-            startMoving();
-          
-        switch (code) {
-            case UP -> newY -= 1;
-            case DOWN -> newY += 1;
-            case LEFT -> newX -= 1;
-            case RIGHT -> newX += 1;
-        }
-
-        event.consume();  // Empêche la propagation de l'événement
-        updateMap();
-    }
-
-    private static final double PACMAN_SPEED = 0.2;  // Ralentir Pacman, déplacer toutes les 0.5 secondes
-    private double lastMoveTime = 0;  // Temps depuis le dernier mouvement
-
-    // AnimationTimer pour le mouvement continu
     private void startMoving() {
         if (movementTimer != null) {
             movementTimer.stop();
@@ -234,7 +211,6 @@ public class PlayController {
         };
         movementTimer.start();
     }
-
 
     private void movePacman() {
         int newX = pacman.getPosX();
@@ -260,7 +236,6 @@ public class PlayController {
                 break;
         }
 
-        // Vérifier si Pacman peut se déplacer dans cette direction (pas de mur)
         if (map.isWalkable(newY, newX)) {
             map.updateTile(pacman.getPosY(), pacman.getPosX(), 'S');
             // Si Pacman peut se déplacer, met à jour sa position
@@ -268,6 +243,7 @@ public class PlayController {
             pacman.setPosY(newY);
 
             // Met à jour la carte
+            pacman.collectPellet(map.getTile(newY, newX));
             map.updateTile(newY, newX, 'P');  // 'P' pour Pacman
             updateMap();  // Rafraîchir l'affichage
         } else {
@@ -276,4 +252,23 @@ public class PlayController {
         }
     }
 
+    private void handleKeyPress(KeyEvent event) {
+        KeyCode code = event.getCode();
+
+        if (currentDirection == null || code != currentDirection) {
+            currentDirection = code;
+
+            startMoving();
+          
+        /*switch (code) {
+            case UP -> newY -= 1;
+            case DOWN -> newY += 1;
+            case LEFT -> newX -= 1;
+            case RIGHT -> newX += 1;
+        }*/
+
+            event.consume();  // Empêche la propagation de l'événement
+            updateMap();
+        }
+    }
 }

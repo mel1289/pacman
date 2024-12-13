@@ -4,6 +4,8 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             stylesheets="@../styles.css"
             fx:controller="org.devops.projet_pacman.controllers.PlayController"
@@ -24,19 +26,16 @@
     <VBox fx:id="centerContent" alignment="CENTER" spacing="20"
           AnchorPane.topAnchor="100" AnchorPane.bottomAnchor="60" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
-        <Pane fx:id="gamePane" style="-fx-background-color: #000000"
-              AnchorPane.leftAnchor="50" AnchorPane.rightAnchor="50"
-              AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
-            <ImageView fx:id="pacmanImage" fitWidth="50" fitHeight="50">
+        <Pane fx:id="gamePane">
+            <!-- Pac-Man -->
+            <ImageView fx:id="pacmanImage">
                 <image>
                     <Image url="@../images/pacman_opened.png" />
                 </image>
+                <fitWidth>50</fitWidth>
+                <fitHeight>50</fitHeight>
             </ImageView>
         </Pane>
-
-        <StackPane alignment="CENTER">
-            <Pane fx:id="gamePane" style="-fx-background-color: #000000;" />
-        </StackPane>
 
         <StackPane fx:id="btnRetour" styleClass="menu-div" alignment="CENTER">
             <Rectangle width="200" height="50" styleClass="menu-border" />

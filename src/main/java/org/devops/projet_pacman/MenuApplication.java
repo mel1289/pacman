@@ -13,6 +13,7 @@ public class MenuApplication extends Application {
             primaryStage.setTitle("PacMan Reborn");
             primaryStage.setMinHeight(700);
             primaryStage.setMinWidth(1000);
+
             //primaryStage.setFullScreen(true);
             //primaryStage.setResizable(false);
 
