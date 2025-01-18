@@ -241,6 +241,35 @@ public class PlayController {
 
                 // Vérifier si suffisamment de temps s'est écoulé depuis le dernier mouvement
                 if (elapsedTime - lastMoveTime >= PACMAN_SPEED) {
+
+                    // Regarde si la parti est perdu, si oui, on arrete le jeu et on affiche une nouvelle fenetre pour rejouer ou aller au menu principal
+                    int pos_x_pacman = pacman.getPosX();
+                    int pos_y_pacman = pacman.getPosY();
+
+                    int pos_x_ghost = ghost.getPosX();
+                    int pos_y_ghost = ghost.getPosY();
+
+                    if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && !pacman.isPoweredUp()){
+                        System.out.println("perdu");
+                        movementTimer.stop();
+                        ScreenManager.showGameOverScreen();
+                        return;
+                    }
+
+                    if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && pacman.isPoweredUp()){
+                        ghost.setPosX(10);
+                        ghost.setPosY(8);
+                        pacman.activatePowerUp(0);
+                        pacman.addScore(100);
+                        ghost.setImage("/org/devops/projet_pacman/images/ghost.png");
+                    }
+
+                    if (pacman.isPoweredUp()) {
+                        ghost.setImage("/org/devops/projet_pacman/images/ghost_scared.png");
+                    } else {
+                        ghost.setImage("/org/devops/projet_pacman/images/ghost.png");
+                    }
+
                     movePacman();
                     moveGhost();
                     updateMap();
@@ -261,6 +290,28 @@ public class PlayController {
             int newX = ghost.getPosX();
             int newY = ghost.getPosY();
             this.ghostDirection = directions[rand.nextInt(directions.length)];
+
+            // Regarde si la parti est perdu, si oui, on arrete le jeu et on affiche une nouvelle fenetre pour rejouer ou aller au menu principal
+            int pos_x_pacman = pacman.getPosX();
+            int pos_y_pacman = pacman.getPosY();
+
+            int pos_x_ghost = ghost.getPosX();
+            int pos_y_ghost = ghost.getPosY();
+
+            if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && !pacman.isPoweredUp()){
+                System.out.println("perdu");
+                movementTimer.stop();
+                ScreenManager.showGameOverScreen();
+                return;
+            }
+
+            if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && pacman.isPoweredUp()){
+                ghost.setPosX(10);
+                ghost.setPosY(8);
+                pacman.activatePowerUp(0);
+                pacman.addScore(100);
+                ghost.setImage("/org/devops/projet_pacman/images/ghost.png");
+            }
 
             // Calculer la nouvelle position en fonction de la direction
             switch (this.ghostDirection) {
@@ -306,6 +357,28 @@ public class PlayController {
         int newX = pacman.getPosX();
         int newY = pacman.getPosY();
 
+        // Regarde si la parti est perdu, si oui, on arrete le jeu et on affiche une nouvelle fenetre pour rejouer ou aller au menu principal
+        int pos_x_pacman = pacman.getPosX();
+        int pos_y_pacman = pacman.getPosY();
+
+        int pos_x_ghost = ghost.getPosX();
+        int pos_y_ghost = ghost.getPosY();
+
+        if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && !pacman.isPoweredUp()){
+            System.out.println("perdu");
+            movementTimer.stop();
+            ScreenManager.showGameOverScreen();
+            return;
+        }
+
+        if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && pacman.isPoweredUp()){
+            ghost.setPosX(10);
+            ghost.setPosY(8);
+            pacman.activatePowerUp(0);
+            pacman.addScore(100);
+            ghost.setImage("/org/devops/projet_pacman/images/ghost.png");
+        }
+
         // Calculer la nouvelle position en fonction de la direction actuelle
         switch (currentDirection) {
             case UP:
@@ -326,6 +399,10 @@ public class PlayController {
                 break;
         }
 
+        if (pacman.isPoweredUp()) {
+            pacman.decrementPowerUp();
+        }
+
         if (map.isWalkable(newY, newX)) {
             map.updateTile(pacman.getPosY(), pacman.getPosX(), 'S');
             // Si Pacman peut se déplacer, met à jour sa position
@@ -338,7 +415,7 @@ public class PlayController {
             pacman.collectPellet(map.getTile(newY, newX));
             map.updateTile(newY, newX, 'P');
         } else {
-            movementTimer.stop();
+            // movementTimer.stop(); // Si le pacman est bloqué, tout le jeu bloque...
         }
     }
 

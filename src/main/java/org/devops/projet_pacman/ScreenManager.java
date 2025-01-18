@@ -43,6 +43,10 @@ public class ScreenManager {
         setScreenContent("views/play-view.fxml");
     }
 
+    public static void showGameOverScreen() {
+        setScreenContent("views/game_over.fxml");
+    }
+
     private static void setScreenContent(String fxmlFile) {
 
         System.out.println(fxmlFile);

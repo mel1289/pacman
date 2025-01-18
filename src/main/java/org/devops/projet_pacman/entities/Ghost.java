@@ -37,7 +37,7 @@ public class Ghost {
         return image;
     }
 
-    public void setImage(ImageView image) {
-        this.image = image;
+    public void setImage(String path) {
+        this.image = new ImageView(new Image(getClass().getResourceAsStream(path)));;
     }
 }

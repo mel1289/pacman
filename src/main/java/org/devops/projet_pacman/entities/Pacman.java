@@ -52,6 +52,14 @@ public class Pacman {
         return score;
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public void addScore (int score) {
+        this.score = getScore() + score;
+    }
+
     public boolean isPoweredUp() {
         return isPoweredUp;
     }
@@ -65,7 +73,7 @@ public class Pacman {
             score += 10;
         } else if (tile == 'O') {
             score += 50;
-            activatePowerUp(10); // Power-up dure 10 tours
+            activatePowerUp(60); // Power-up dure 60 ticks
         }
     }
 
