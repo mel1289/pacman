@@ -13,7 +13,6 @@ public class Pacman {
     private int score;
     private boolean isPoweredUp;
     private int powerUpDuration;
-    private int life;
 
     private ImageView image;
 
@@ -24,7 +23,6 @@ public class Pacman {
         this.score = 0;
         this.isPoweredUp = false;
         this.powerUpDuration = 0;
-        this.life = 3;
         this.image = new ImageView(new Image(getClass().getResourceAsStream(pathPacmanSkin)));
     }
 
@@ -52,10 +50,6 @@ public class Pacman {
         return score;
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public void addScore (int score) {
         this.score = getScore() + score;
     }
@@ -73,7 +67,7 @@ public class Pacman {
             score += 10;
         } else if (tile == 'O') {
             score += 50;
-            activatePowerUp(60); // Power-up dure 60 ticks
+            activatePowerUp(60); // Power-up dure 10 tours
         }
     }
 

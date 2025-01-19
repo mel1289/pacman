@@ -4,7 +4,7 @@
 }
 
 .root {
-    -fx-background-color: linear-gradient(to bottom, rgba(15, 15, 15, 0.95), rgba(26, 26, 26, 0.95)); /* Fond noir avec dégradé */
+    -fx-background-color: black; /*linear-gradient(to bottom, rgba(15, 15, 15, 0.95), rgba(26, 26, 26, 0.95)); /* Fond noir avec dégradé */
     -fx-font-family: "Emulogic";
     -fx-pref-height: 100%;
     -fx-pref-width: 100%;
@@ -26,15 +26,15 @@
 }
 
 .menu-text {
-    -fx-font-size: 10px; /* Taille du texte dépendante de la largeur de la fenêtre */
+    -fx-font-size: 10px;
     -fx-font-weight: bold;
-    -fx-fill: #FFFFFF; /* Texte blanc */
+    -fx-fill: #FFFFFF;
 }
 
 .menu-title {
     -fx-font-size: 10px;
     -fx-font-weight: bold;
-    -fx-fill: #FFFFFF; /* Texte blanc */
+    -fx-fill: #FFFFFF;
 }
 
 .score-text {
@@ -49,58 +49,102 @@
     -fx-effect: dropshadow(gaussian, #22ff00, 1, 0.8, 0, 0);
 }
 
-/* Effet hover (survol) pour la bordure */
 .menu-div:hover .menu-border {
-    -fx-stroke: #FFD700; /* Bordure jaune vif */
-    -fx-effect: dropshadow(gaussian, #FFD700, 20, 0.8, 0, 0); /* Glow intense sur la bordure */
+    -fx-stroke: #FFD700;
+    -fx-effect: dropshadow(gaussian, #FFD700, 20, 0.8, 0, 0);
 }
 
-/* Effet hover pour le texte */
 .menu-div:hover .menu-text {
-    -fx-fill: #FFD700; /* Texte jaune vif */
+    -fx-fill: #FFD700;
 }
 
-/* Effet clic (facultatif) */
 .menu-div:pressed .menu-border {
-    -fx-stroke: #FFA500; /* Orange foncé lors du clic */
+    -fx-stroke: #FFA500;
 }
 
-/* Appliquer un style spécifique au ListView */
 .list-view {
-    -fx-background-color: transparent; /* Fond transparent */
-    -fx-border-color: #FFD700; /* Bordure jaune vif */
+    -fx-background-color: transparent;
+    -fx-border-color: #FFD700;
     -fx-border-width: 2px;
     -fx-border-radius: 10px;
     -fx-padding: 10px;
-    -fx-control-inner-background: #000000; /* Fond interne noir */
-    -fx-control-inner-background-alt: #111111; /* Alternance pour les lignes */
-    -fx-fixed-cell-size: 40px; /* Taille des cellules */
+    -fx-control-inner-background: #000000;
+    -fx-control-inner-background-alt: #111111;
+    -fx-fixed-cell-size: 40px;
 }
 
-/* Style des barres de défilement */
 .scroll-bar {
-    -fx-background-color: #FFD700; /* Fond jaune vif */
+    -fx-background-color: #FFD700;
 }
 
-/* Style des cellules dans la ListView */
 .list-cell {
-    -fx-background-color: #000000; /* Fond noir */
-    -fx-text-fill: #FFFFFF; /* Texte blanc */
-    -fx-font-family: "PacmanFont"; /* Police Pac-Man */
+    -fx-background-color: #000000;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "PacmanFont";
     -fx-font-size: 16px;
     -fx-alignment: center-left;
     -fx-padding: 5px 10px;
 }
 
-/* Effets pour les cellules */
 .list-cell:hover {
-    -fx-background-color: #FFD700; /* Fond jaune vif */
+    -fx-background-color: #FFD700;
     -fx-text-fill: #000000;
     -fx-font-weight: bold;
 }
 
 .list-cell:selected {
-    -fx-background-color: #FFA500; /* Fond orange vif */
+    -fx-background-color: #FFA500;
     -fx-text-fill: #FFFFFF;
     -fx-font-weight: bold;
+}
+
+.menu-title {
+    -fx-fill: #FFFFFF;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.menu-input {
+    -fx-background-color: #333333;
+    -fx-text-fill: #FFFFFF;
+    -fx-prompt-text-fill: #AAAAAA;
+    -fx-font-size: 14px;
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10 10;
+    -fx-pref-width: 250px;
+    -fx-max-width: 300px;
+}
+
+.menu-input:focused {
+    -fx-border-color: #FFD700;
+    -fx-background-color: #444444;
+}
+
+.menu-div {
+    -fx-alignment: center;
+}
+
+.menu-border {
+    -fx-fill: transparent;
+    -fx-stroke: #FFFFFF;
+    -fx-stroke-width: 2;
+    -fx-arc-width: 10;
+    -fx-arc-height: 10;
+}
+
+.menu-text {
+    -fx-fill: #FFFFFF;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.menu-button:hover .menu-border {
+    -fx-stroke: #FFD700;
+}
+
+.menu-button:hover .menu-text {
+    -fx-fill: #FFD700;
 }

@@ -70,7 +70,7 @@ public class PlayController {
 
         btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
 
-       // VBox.setMargin(btnRetour, new Insets(-10, 0, 0, 0));
+        // VBox.setMargin(btnRetour, new Insets(-10, 0, 0, 0));
 
         String[] base_map = {
                 "/////////////////////",
@@ -252,7 +252,7 @@ public class PlayController {
                     if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && !pacman.isPoweredUp()){
                         System.out.println("perdu");
                         movementTimer.stop();
-                        ScreenManager.showGameOverScreen();
+                        ScreenManager.showGameOver();
                         return;
                     }
 
@@ -280,6 +280,18 @@ public class PlayController {
         movementTimer.start();
     }
 
+    private boolean allPelletsEaten() {
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                char tile = map.getTile(y, x);
+                if (tile == 'o' || tile == 'O') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private void moveGhost() {
         Random rand = new Random();
         char[] directions = {'U', 'D', 'R', 'L'};
@@ -301,7 +313,7 @@ public class PlayController {
             if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && !pacman.isPoweredUp()){
                 System.out.println("perdu");
                 movementTimer.stop();
-                ScreenManager.showGameOverScreen();
+                ScreenManager.showGameOver();
                 return;
             }
 
@@ -367,7 +379,7 @@ public class PlayController {
         if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && !pacman.isPoweredUp()){
             System.out.println("perdu");
             movementTimer.stop();
-            ScreenManager.showGameOverScreen();
+            ScreenManager.showGameOver();
             return;
         }
 
@@ -414,6 +426,12 @@ public class PlayController {
 
             pacman.collectPellet(map.getTile(newY, newX));
             map.updateTile(newY, newX, 'P');
+
+            if (allPelletsEaten()) {
+                movementTimer.stop();
+                ScreenManager.showWin();
+            }
+
         } else {
             // movementTimer.stop(); // Si le pacman est bloqué, tout le jeu bloque...
         }
@@ -426,7 +444,7 @@ public class PlayController {
             currentDirection = code;
 
             startMoving();
-          
+
         /*switch (code) {
             case UP -> newY -= 1;
             case DOWN -> newY += 1;

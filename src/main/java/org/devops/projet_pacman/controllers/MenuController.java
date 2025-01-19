@@ -15,7 +15,7 @@ public class MenuController {
     private StackPane playButton;
 
     @FXML
-    private StackPane leaderboardButton;
+    private StackPane multiplayerBtn;
 
     @FXML
     private StackPane exitButton;
@@ -29,7 +29,7 @@ public class MenuController {
 
         playButton.setOnMouseClicked(e -> ScreenManager.showPlay());
 
-        leaderboardButton.setOnMouseClicked(e -> ScreenManager.showLeaderboardScreen());
+        multiplayerBtn.setOnMouseClicked(e -> ScreenManager.showJoinOrCreateParty());
 
         exitButton.setOnMouseClicked(e -> {
             System.exit(0);
