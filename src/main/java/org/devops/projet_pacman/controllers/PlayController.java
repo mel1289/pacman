@@ -22,8 +22,11 @@ import org.devops.projet_pacman.ScreenManager;
 import org.devops.projet_pacman.entities.Ghost;
 import org.devops.projet_pacman.entities.Map;
 import org.devops.projet_pacman.entities.Pacman;
-
+import org.devops.projet_pacman.entities.Pellet;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class PlayController {
@@ -36,6 +39,7 @@ public class PlayController {
 
     @FXML
     private Text scoreText;
+
 
     private boolean isMouseOpen = true;
     private final Image pacmanOpen = new Image(getClass().getResource("/org/devops/projet_pacman/images/pacman_opened.png").toExternalForm());
@@ -57,8 +61,6 @@ public class PlayController {
 
     private MenuApplication menuApplication;
 
-    // AnimationTimer pour le mouvement continu
-
     @FXML
     public void initialize() {
         btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
@@ -68,7 +70,7 @@ public class PlayController {
 
         btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
 
-       // VBox.setMargin(btnRetour, new Insets(-10, 0, 0, 0));
+        // VBox.setMargin(btnRetour, new Insets(-10, 0, 0, 0));
 
         String[] base_map = {
                 "/////////////////////",
@@ -133,94 +135,86 @@ public class PlayController {
                 double posX = x * cellWidth;
                 double posY = y * cellHeight;
 
+                boolean isPelletInMap = map.containsPelletPosition(x, y);
+                boolean isBigPelletInMap = map.containsBigPelletPosition(x, y);
+
                 // System.out.println(x + " * " + cellWidth + " = " + posX);
 
-                switch (tile) {
-                    case '/':
-                        gc.setFill(Color.BLUE);
-                        gc.fillRect(posX, posY, cellWidth, cellHeight);
-                        break;
-                    case 'o':
-                        double dotWidth = cellWidth / 4;
-                        double dotHeight = cellHeight / 4;
-                        gc.setFill(Color.WHITE);
-                        gc.fillOval(posX + (cellWidth / 2) - (dotWidth / 2), posY + (cellHeight / 2) - (dotHeight / 2), dotWidth, dotHeight);
-                        break;
-                    case 'O':
-                        double bigDotWidth = cellWidth / 2;
-                        double bigDotHeight = cellHeight / 2;
-                        gc.setFill(Color.WHITE);
-                        gc.fillOval(posX + (cellWidth / 2) - (bigDotWidth / 2), posY + (cellHeight / 2) - (bigDotHeight / 2), bigDotWidth, bigDotHeight);
-                        break;
-                    case 'b':
-                        double ghostWidth = cellWidth;
-                        double ghostHeight = cellHeight;
+                if (tile == '/') {
+                    gc.setFill(Color.BLUE);
+                    gc.fillRect(posX, posY, cellWidth, cellHeight);
+                } if (tile == 'o' || isPelletInMap) {
+                    double dotWidth = cellWidth / 4;
+                    double dotHeight = cellHeight / 4;
+                    gc.setFill(Color.WHITE);
+                    gc.fillOval(posX + (cellWidth / 2) - (dotWidth / 2), posY + (cellHeight / 2) - (dotHeight / 2), dotWidth, dotHeight);
+                    map.addPelletPosition(x, y);
+                } if (tile == 'O' || isBigPelletInMap) {
+                    double bigDotWidth = cellWidth / 2;
+                    double bigDotHeight = cellHeight / 2;
+                    gc.setFill(Color.WHITE);
+                    gc.fillOval(posX + (cellWidth / 2) - (bigDotWidth / 2), posY + (cellHeight / 2) - (bigDotHeight / 2), bigDotWidth, bigDotHeight);
+                    map.addBigPelletPosition(x, y);
+                } if (tile == 'b') {
+                    double ghostWidth = cellWidth;
+                    double ghostHeight = cellHeight;
 
-                        ghost.getImage().setFitWidth(ghostWidth);
-                        ghost.getImage().setFitHeight(ghostHeight);
+                    ghost.getImage().setFitWidth(ghostWidth);
+                    ghost.getImage().setFitHeight(ghostHeight);
 
-                        double paneWidth2 = Toolkit.getDefaultToolkit().getScreenSize().width; //gamePane.getWidth();
+                    double paneWidth2 = Toolkit.getDefaultToolkit().getScreenSize().width; //gamePane.getWidth();
 
-                        posX = posX + ((paneWidth2 - canvasWidth) / 2);
+                    posX = posX + ((paneWidth2 - canvasWidth) / 2);
 
-                        ghost.setPosX(x);
-                        ghost.setPosY(y);
+                    ghost.setPosX(x);
+                    ghost.setPosY(y);
 
-                        ghost.getImage().setVisible(true);
-                        ghost.getImage().setLayoutX(posX);
-                        ghost.getImage().setLayoutY(posY);
-                        break;
-                    case 'P':
-                        double pacmanWidth = cellWidth;
-                        double pacmanHeight = cellHeight;
+                    ghost.getImage().setVisible(true);
+                    ghost.getImage().setLayoutX(posX);
+                    ghost.getImage().setLayoutY(posY);
+                } if (tile == 'P') {
+                    double pacmanWidth = cellWidth;
+                    double pacmanHeight = cellHeight;
 
-                        pacman.getImage().setFitWidth(pacmanWidth);
-                        pacman.getImage().setFitHeight(pacmanHeight);
+                    pacman.getImage().setFitWidth(pacmanWidth);
+                    pacman.getImage().setFitHeight(pacmanHeight);
 
-                        double paneWidth = Toolkit.getDefaultToolkit().getScreenSize().width; //gamePane.getWidth();
+                    double paneWidth = Toolkit.getDefaultToolkit().getScreenSize().width; //gamePane.getWidth();
 
-                        posX = posX + ((paneWidth - canvasWidth) / 2);
+                    posX = posX + ((paneWidth - canvasWidth) / 2);
 
-                        //posY = posY + (cellHeight / 2) - (pacmanHeight / 2);
+                    pacman.setPosX(x);
+                    pacman.setPosY(y);
 
-                        pacman.setPosX(x);
-                        pacman.setPosY(y);
+                    isMouseOpen = !isMouseOpen; // Alterne entre ouvert et fermé
+                    if (isMouseOpen) {
+                        pacman.getImage().setImage(pacmanOpen);  // Pacman ouvert
+                    } else {
+                        pacman.getImage().setImage(pacmanClosed);  // Pacman fermé
+                    }
 
-                        isMouseOpen = !isMouseOpen; // Alterne entre ouvert et fermé
-                        if (isMouseOpen) {
-                            pacman.getImage().setImage(pacmanOpen);  // Pacman ouvert
-                        } else {
-                            pacman.getImage().setImage(pacmanClosed);  // Pacman fermé
-                        }
+                    char directionPacman = pacman.getDirection();
 
-                        char directionPacman = pacman.getDirection();
+                    // Met à jour l'orientation de Pacman en fonction de la direction
+                    if (directionPacman == 'r') {  // Droite
+                        pacman.getImage().setRotate(0);        // Rotation à 0° (regarde vers la droite)
+                        pacman.getImage().setScaleX(1);        // Normalement orienté
+                    } else if (directionPacman == 'l') {  // Gauche
+                        pacman.getImage().setRotate(360);      // Rotation à 180° (regarde vers la gauche)
+                        pacman.getImage().setScaleX(-1);       // Inverser horizontalement
+                    } else if (directionPacman == 'd') {  // Bas
+                        pacman.getImage().setRotate(90);       // Rotation à 90° (regarde vers le bas)
+                        pacman.getImage().setScaleX(1);        // Normalement orienté
+                    } else if (directionPacman == 'u') {  // Haut
+                        pacman.getImage().setRotate(270);      // Rotation à 270° (regarde vers le haut)
+                        pacman.getImage().setScaleX(1);        // Normalement orienté
+                    }
 
-                        // Met à jour l'orientation de Pacman en fonction de la direction
-                        switch (directionPacman) {
-                            case 'r':  // Droite
-                                pacman.getImage().setRotate(0);        // Rotation à 0° (regarde vers la droite)
-                                pacman.getImage().setScaleX(1);        // Normalement orienté
-                                break;
-                            case 'l':  // Gauche
-                                pacman.getImage().setRotate(360);      // Rotation à 180° (regarde vers la gauche)
-                                pacman.getImage().setScaleX(-1);       // Inverser horizontalement
-                                break;
-                            case 'd':  // Bas
-                                pacman.getImage().setRotate(90);       // Rotation à 90° (regarde vers le bas)
-                                pacman.getImage().setScaleX(1);        // Normalement orienté
-                                break;
-                            case 'u':  // Haut
-                                pacman.getImage().setRotate(270);      // Rotation à 270° (regarde vers le haut)
-                                pacman.getImage().setScaleX(1);        // Normalement orienté
-                                break;
-                        }
-
-                        pacman.getImage().setVisible(true);
-                        pacman.getImage().setLayoutX(posX);
-                        pacman.getImage().setLayoutY(posY);
-
-                        //gc.drawImage(pacmanImage.getImage(), posX, posY, pacmanWidth, pacmanHeight);
+                    pacman.getImage().setVisible(true);
+                    pacman.getImage().setLayoutX(posX);
+                    pacman.getImage().setLayoutY(posY);
                 }
+
             }
         }
 
@@ -247,8 +241,38 @@ public class PlayController {
 
                 // Vérifier si suffisamment de temps s'est écoulé depuis le dernier mouvement
                 if (elapsedTime - lastMoveTime >= PACMAN_SPEED) {
+
+                    // Regarde si la parti est perdu, si oui, on arrete le jeu et on affiche une nouvelle fenetre pour rejouer ou aller au menu principal
+                    int pos_x_pacman = pacman.getPosX();
+                    int pos_y_pacman = pacman.getPosY();
+
+                    int pos_x_ghost = ghost.getPosX();
+                    int pos_y_ghost = ghost.getPosY();
+
+                    if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && !pacman.isPoweredUp()){
+                        System.out.println("perdu");
+                        movementTimer.stop();
+                        ScreenManager.showGameOver();
+                        return;
+                    }
+
+                    if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && pacman.isPoweredUp()){
+                        ghost.setPosX(10);
+                        ghost.setPosY(8);
+                        pacman.activatePowerUp(0);
+                        pacman.addScore(100);
+                        ghost.setImage("/org/devops/projet_pacman/images/ghost.png");
+                    }
+
+                    if (pacman.isPoweredUp()) {
+                        ghost.setImage("/org/devops/projet_pacman/images/ghost_scared.png");
+                    } else {
+                        ghost.setImage("/org/devops/projet_pacman/images/ghost.png");
+                    }
+
                     movePacman();
                     moveGhost();
+                    updateMap();
                     lastMoveTime = elapsedTime;  // Mettre à jour le temps du dernier mouvement
                 }
             }
@@ -256,67 +280,116 @@ public class PlayController {
         movementTimer.start();
     }
 
+    private boolean allPelletsEaten() {
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                char tile = map.getTile(y, x);
+                if (tile == 'o' || tile == 'O') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     private void moveGhost() {
-        int newX = ghost.getPosX();
-        int newY = ghost.getPosY();
-
-        //System.out.println(map.getTile(newX, newY));
-
         Random rand = new Random();
-
         char[] directions = {'U', 'D', 'R', 'L'};
 
-        this.ghostDirection = directions[rand.nextInt(directions.length)];
-
-        switch (this.ghostDirection) {
-            case 'U':
-                newY -= 1;
-                break;
-            case 'D':
-                newY += 1;
-                break;
-            case 'L':
-                newX -= 1;
-                break;
-            case 'R':
-                newX += 1;
-                break;
-        }
-
-        //System.out.println("Nouveau : " + map.getTile(newX, newY) + "\n\n");
-
-        if (map.isWalkable(newY, newX)) {
-
-            if (this.ghostDirection == 'L' || this.ghostDirection == 'U') {
-                System.out.println("zeeeeee");
-            }
-
-            map.updateTile(ghost.getPosY(), ghost.getPosX(), map.getTile(ghost.getPosY(), ghost.getPosX()) != 'b' ? map.getTile(ghost.getPosY(), ghost.getPosX()) : 'S');
-
-            if (map.getTile(newY, newX) == 'b') {
-
-            }
-
-            ghost.setPosX(newX);
-            ghost.setPosY(newY);
-
-            System.out.println(ghost.getPosX() + " / " + ghost.getPosY());
-
-            map.updateTile(newY, newX, 'b');
-
-            System.out.println("============");
-            map.displayMap();
-            System.out.println("============");
-
-            updateMap();
-        } else {
+        // Répéter tant que la case suivante n'est pas walkable
+        boolean moved = false;
+        while (!moved) {
+            int newX = ghost.getPosX();
+            int newY = ghost.getPosY();
             this.ghostDirection = directions[rand.nextInt(directions.length)];
-       }
+
+            // Regarde si la parti est perdu, si oui, on arrete le jeu et on affiche une nouvelle fenetre pour rejouer ou aller au menu principal
+            int pos_x_pacman = pacman.getPosX();
+            int pos_y_pacman = pacman.getPosY();
+
+            int pos_x_ghost = ghost.getPosX();
+            int pos_y_ghost = ghost.getPosY();
+
+            if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && !pacman.isPoweredUp()){
+                System.out.println("perdu");
+                movementTimer.stop();
+                ScreenManager.showGameOver();
+                return;
+            }
+
+            if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && pacman.isPoweredUp()){
+                ghost.setPosX(10);
+                ghost.setPosY(8);
+                pacman.activatePowerUp(0);
+                pacman.addScore(100);
+                ghost.setImage("/org/devops/projet_pacman/images/ghost.png");
+            }
+
+            // Calculer la nouvelle position en fonction de la direction
+            switch (this.ghostDirection) {
+                case 'U':
+                    newY -= 1;
+                    break;
+                case 'D':
+                    newY += 1;
+                    break;
+                case 'L':
+                    newX -= 1;
+                    break;
+                case 'R':
+                    newX += 1;
+                    break;
+            }
+
+            // Vérifier si la case est walkable
+            if (map.isWalkable(newY, newX)) {
+                // Si oui, on marque le mouvement comme effectué
+                moved = true;
+
+                // Mise à jour de l'ancienne case du fantôme
+                map.updateTile(ghost.getPosY(), ghost.getPosX(), map.getTile(ghost.getPosY(), ghost.getPosX()) != 'b' ? map.getTile(ghost.getPosY(), ghost.getPosX()) : 'S');
+
+                // Déplacement du fantôme
+                ghost.setPosX(newX);
+                ghost.setPosY(newY);
+
+                // System.out.println(ghost.getPosX() + " / " + ghost.getPosY());
+
+                // Mettre à jour la nouvelle case du fantôme avec 'b'
+                map.updateTile(newY, newX, 'b');
+
+                // System.out.println("============");
+                // map.displayMap();
+                // System.out.println("============");
+            }
+        }
     }
 
     private void movePacman() {
         int newX = pacman.getPosX();
         int newY = pacman.getPosY();
+
+        // Regarde si la parti est perdu, si oui, on arrete le jeu et on affiche une nouvelle fenetre pour rejouer ou aller au menu principal
+        int pos_x_pacman = pacman.getPosX();
+        int pos_y_pacman = pacman.getPosY();
+
+        int pos_x_ghost = ghost.getPosX();
+        int pos_y_ghost = ghost.getPosY();
+
+        if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && !pacman.isPoweredUp()){
+            System.out.println("perdu");
+            movementTimer.stop();
+            ScreenManager.showGameOver();
+            return;
+        }
+
+        if (pos_x_pacman == pos_x_ghost && pos_y_pacman == pos_y_ghost && pacman.isPoweredUp()){
+            ghost.setPosX(10);
+            ghost.setPosY(8);
+            pacman.activatePowerUp(0);
+            pacman.addScore(100);
+            ghost.setImage("/org/devops/projet_pacman/images/ghost.png");
+        }
 
         // Calculer la nouvelle position en fonction de la direction actuelle
         switch (currentDirection) {
@@ -338,18 +411,29 @@ public class PlayController {
                 break;
         }
 
+        if (pacman.isPoweredUp()) {
+            pacman.decrementPowerUp();
+        }
+
         if (map.isWalkable(newY, newX)) {
             map.updateTile(pacman.getPosY(), pacman.getPosX(), 'S');
             // Si Pacman peut se déplacer, met à jour sa position
             pacman.setPosX(newX);
             pacman.setPosY(newY);
 
-            // Met à jour la carte
+            map.removePelletPosition(newX, newY);
+            map.removeBigPelletPosition(newX, newY);
+
             pacman.collectPellet(map.getTile(newY, newX));
-            map.updateTile(newY, newX, 'P');  // 'P' pour Pacman
-            updateMap();  // Rafraîchir l'affichage
+            map.updateTile(newY, newX, 'P');
+
+            if (allPelletsEaten()) {
+                movementTimer.stop();
+                ScreenManager.showWin();
+            }
+
         } else {
-            movementTimer.stop();
+            // movementTimer.stop(); // Si le pacman est bloqué, tout le jeu bloque...
         }
     }
 
@@ -360,7 +444,7 @@ public class PlayController {
             currentDirection = code;
 
             startMoving();
-          
+
         /*switch (code) {
             case UP -> newY -= 1;
             case DOWN -> newY += 1;
@@ -369,7 +453,6 @@ public class PlayController {
         }*/
 
             event.consume();  // Empêche la propagation de l'événement
-            updateMap();
         }
     }
 }

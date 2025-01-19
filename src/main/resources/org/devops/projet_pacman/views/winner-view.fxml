@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.devops.projet_pacman.controllers.WinnerController"
+            stylesheets="@../styles.css">
+
+    <VBox alignment="CENTER" spacing="40" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" >
+        <Label text="Vous avez remporte la partie!" style="-fx-text-fill: #FFD700; -fx-font-size: 24px;" />
+
+        <StackPane fx:id="btnRetour" styleClass="menu-div">
+            <Rectangle fx:id="borderOptions" width="200" height="50" styleClass="menu-border" />
+            <Text fx:id="textOptions" text="Retour" styleClass="menu-text" />
+        </StackPane>
+    </VBox>
+</AnchorPane>
+

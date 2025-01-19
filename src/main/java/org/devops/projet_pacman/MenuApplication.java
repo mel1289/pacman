@@ -3,39 +3,37 @@ package org.devops.projet_pacman;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.awt.*;
-
 public class MenuApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        try {
-            ScreenManager.setPrimaryStage(primaryStage);
-            ScreenManager.showMainScreen();
+        // Définir le stage dans le ScreenManager
+        ScreenManager.setPrimaryStage(primaryStage);
 
-            primaryStage.setTitle("PacMan Reborn");
-            primaryStage.setHeight(Toolkit.getDefaultToolkit().getScreenSize().height);
-            primaryStage.setWidth(Toolkit.getDefaultToolkit().getScreenSize().width);
+        // Afficher l'écran principal (menu)
+        ScreenManager.showMainScreen();
 
-            primaryStage.setFullScreen(true);
-            primaryStage.setResizable(false);
+        // Paramètres de la fenêtre (ou plein écran) selon tes besoins
+        primaryStage.setTitle("PacMan Reborn");
+        primaryStage.setFullScreen(true);
+        primaryStage.setResizable(false);
 
-            primaryStage.fullScreenExitHintProperty().setValue("");
-            primaryStage.setFullScreenExitKeyCombination(null);
+        // Pour empêcher la sortie du mode fullscreen par ESC ou autre :
+        primaryStage.fullScreenExitHintProperty().setValue("");
+        primaryStage.setFullScreenExitKeyCombination(null);
 
-            primaryStage.fullScreenProperty().addListener((obs, wasFullScreen, isFullScreen) -> {
-                if (!isFullScreen) {
-                    primaryStage.setFullScreen(true);
-                }
-            });
+        // Optionnel : forcer le plein écran en permanence
+        primaryStage.fullScreenProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal) {
+                primaryStage.setFullScreen(true);
+            }
+        });
 
-
-            primaryStage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // Affichage de la fenêtre (déjà fait dans ScreenManager, mais on peut le rappeler ici si besoin)
+        primaryStage.show();
     }
+
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 }

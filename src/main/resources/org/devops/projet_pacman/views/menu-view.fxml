@@ -15,17 +15,17 @@
 
         <StackPane fx:id="playButton" styleClass="menu-div">
             <Rectangle fx:id="borderJouer" width="200" height="50" styleClass="menu-border" />
-            <Text fx:id="textJouer" text="Jouer" styleClass="menu-text" />
+            <Text text="Jouer" styleClass="menu-text" />
         </StackPane>
 
-        <StackPane fx:id="leaderboardButton" styleClass="menu-div">
+        <StackPane fx:id="multiplayerBtn" styleClass="menu-div">
             <Rectangle fx:id="borderOptions" width="200" height="50" styleClass="menu-border" />
-            <Text fx:id="textOptions" text="Classement" styleClass="menu-text" />
+            <Text text="Multijoueur" styleClass="menu-text" />
         </StackPane>
 
         <StackPane fx:id="exitButton" styleClass="menu-div">
             <Rectangle fx:id="borderQuitter" width="200" height="50" styleClass="menu-border" />
-            <Text fx:id="textQuitter" text="Quitter" styleClass="menu-text" />
+            <Text text="Quitter" styleClass="menu-text" />
         </StackPane>
     </VBox>
 

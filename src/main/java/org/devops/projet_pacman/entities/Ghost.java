@@ -1,6 +1,5 @@
 package org.devops.projet_pacman.entities;
 
-import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -8,6 +7,7 @@ public class Ghost {
 
     private int posX;
     private int posY;
+    private char direction; // 'r': droite / 'l': gauche / 'u': haut / 'd': bas
 
     private ImageView image;
 
@@ -37,7 +37,15 @@ public class Ghost {
         return image;
     }
 
-    public void setImage(ImageView image) {
-        this.image = image;
+    public void setImage(String path) {
+        this.image = new ImageView(new Image(getClass().getResourceAsStream(path)));;
+    }
+
+    public void setDirection(char direction) {
+        this.direction = direction;
+    }
+
+    public char getDirection() {
+        return direction;
     }
 }

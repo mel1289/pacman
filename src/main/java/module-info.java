@@ -11,9 +11,20 @@ module org.devops.projet_pacman {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.desktop;
+    requires okhttp3;
+    requires annotations;
+    requires spring.websocket;
+    requires spring.messaging;
+    requires com.google.gson;
+    requires spring.core;
+
+    opens org.devops.projet_pacman.entities to com.google.gson;
+    exports org.devops.projet_pacman.entities;
 
     opens org.devops.projet_pacman to javafx.fxml;
     exports org.devops.projet_pacman;
     exports org.devops.projet_pacman.controllers;
     opens org.devops.projet_pacman.controllers to javafx.fxml;
+    exports org.devops.projet_pacman.events;
+    opens org.devops.projet_pacman.events to com.google.gson;
 }
