@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Label?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx"
+            stylesheets="@../styles.css" style="-fx-background-color: #000000;"
+            fx:controller="org.devops.projet_pacman.controllers.JoinOrCreatePartyController">
+
+    <VBox alignment="CENTER" spacing="30"
+          AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+
+        <VBox fx:id="joinGameSection" alignment="CENTER" spacing="20">
+            <Text text="Rejoindre une Partie" styleClass="menu-title" />
+            <TextField fx:id="joinGameInput" promptText="Code de la partie" styleClass="menu-input" />
+            <StackPane fx:id="joinGameButton" styleClass="menu-div">
+                <Rectangle width="200" height="50" styleClass="menu-border" />
+                <Text text="Rejoindre" styleClass="menu-text" />
+            </StackPane>
+        </VBox>
+
+        <Label fx:id="errorLabel" style="-fx-text-fill: red; -fx-font-size: 14px;" visible="false"/>
+
+        <Region prefHeight="20" />
+
+        <VBox fx:id="createGameSection" alignment="CENTER" spacing="10">
+            <StackPane fx:id="createGameButton" styleClass="menu-div">
+                <Rectangle width="300" height="50" styleClass="menu-border" />
+                <Text text="Creer une partie" styleClass="menu-text" />
+            </StackPane>
+        </VBox>
+
+        <Region prefHeight="20" />
+
+        <StackPane fx:id="loadingModal" visible="false" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            <Rectangle width="1.0" height="1.0" style="-fx-fill: rgba(0, 0, 0, 0.5);" />
+
+            <ProgressIndicator fx:id="loadingSpinner" style="-fx-pref-width: 100px; -fx-pref-height: 100px; -fx-progress-color: yellow;" />
+        </StackPane>
+
+        <StackPane fx:id="exitButton" styleClass="menu-div">
+            <Rectangle width="200" height="50" styleClass="menu-border" />
+            <Text text="Retour" styleClass="menu-text" />
+        </StackPane>
+    </VBox>
+
+</AnchorPane>

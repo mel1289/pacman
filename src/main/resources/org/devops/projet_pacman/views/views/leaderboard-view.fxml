@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.shape.Rectangle?>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            stylesheets="@../styles.css" style="-fx-background-color: #000000;" fx:controller="org.devops.projet_pacman.controllers.LeaderboardController">
+
+    <VBox alignment="CENTER" spacing="20" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <ImageView fx:id="logo" preserveRatio="true" />
+
+        <VBox alignment="CENTER" spacing="10">
+            <Text text="Classement" styleClass="menu-title" />
+            <ListView fx:id="scoreList" prefWidth="300" prefHeight="200" styleClass="list-view" />
+        </VBox>
+
+        <StackPane fx:id="btnRetour" styleClass="menu-div">
+            <Rectangle fx:id="borderOptions" width="200" height="50" styleClass="menu-border" />
+            <Text fx:id="textOptions" text="Retour" styleClass="menu-text" />
+        </StackPane>
+    </VBox>
+</AnchorPane>

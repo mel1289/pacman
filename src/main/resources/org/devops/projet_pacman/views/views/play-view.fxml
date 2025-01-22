@@ -23,7 +23,7 @@
         </Pane>
 
         <StackPane fx:id="btnRetour" styleClass="menu-div" alignment="CENTER">
-            <Rectangle width="300" height="50" styleClass="menu-border" />
+            <Rectangle width="200" height="50" styleClass="menu-border" />
             <Text text="Menu principal" styleClass="menu-text" />
         </StackPane>
     </VBox>

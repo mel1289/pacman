@@ -12,10 +12,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import org.devops.projet_pacman.events.EndGameEvent;
-import org.devops.projet_pacman.events.PlayerMoveEvent;
+import org.devops.projet_pacman.Constant;
 import org.devops.projet_pacman.ScreenManager;
-import org.devops.projet_pacman.entities.*;
+import org.devops.projet_pacman.entities.Ghost;
+import org.devops.projet_pacman.entities.Map;
+import org.devops.projet_pacman.entities.Pacman;
+import org.devops.projet_pacman.events.EndGameEvent;
+import org.devops.projet_pacman.events.GameEvent;
+import org.devops.projet_pacman.events.PlayerMoveEvent;
 import org.devops.projet_pacman.utils.GsonMessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -43,6 +47,8 @@ public class PlayMultiplayerController {
     private StackPane btnRetour;
     @FXML
     private Text scoreText;
+    @FXML
+    private Text ghostInvisibleText;
 
     private boolean isMouseOpen = true;
     private final Image pacmanOpen = new Image(getClass().getResource("/org/devops/projet_pacman/images/pacman_opened.png").toExternalForm());
@@ -61,12 +67,17 @@ public class PlayMultiplayerController {
 
     private StompSession stompSession;
     private Timer positionTimer;
+    private Timer ghostInvisibilityTimer;
 
     @FXML
     public void initialize() {
-        btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
+        btnRetour.setOnMouseClicked(e -> {
+            sendQuitEvent();
+            ScreenManager.showMainScreen();
+        });
 
-        // Initialisation de la carte et des entités
+        ghostInvisibleText.setVisible(false);
+
         String[] base_map = {
                 "/////////////////////",
                 "/ooooooooo/ooooooooo/",
@@ -112,7 +123,7 @@ public class PlayMultiplayerController {
                 if (map.getTile(y, x) == 'b') {
                     ghost.setPosX(x);
                     ghost.setPosY(y);
-                    map.updateTile(y, x, 'S');  // Libère la tuile pour les mouvements futurs
+                    map.updateTile(y, x, 'S');
                     break;
                 }
             }
@@ -128,6 +139,16 @@ public class PlayMultiplayerController {
         gamePane.requestFocus();
 
         connectWebSocket();
+
+        startGhostInvisibilityTimer();
+
+        Platform.runLater(() -> gamePane.getScene().getWindow().setOnCloseRequest(event -> {
+            sendQuitEvent();
+            if (stompSession != null && stompSession.isConnected()) {
+                stompSession.disconnect();
+            }
+            Platform.exit();
+        }));
     }
 
     private void connectWebSocket() {
@@ -144,14 +165,13 @@ public class PlayMultiplayerController {
 
         try {
             Future<StompSession> future = stompClient.connect(
-                    "ws://localhost:8080/ws",
+                    Constant.SOCKET_URL,
                     new WebSocketHttpHeaders(),
                     sessionHandler
             );
             stompSession = future.get();
             System.out.println("Session STOMP connectée : " + stompSession.getSessionId());
 
-            // Souscriptions aux topics spécifiques pour la partie
             if (currentGameCode != null) {
                 String pacmanTopic = "/topic/pacman/" + currentGameCode;
                 stompSession.subscribe(pacmanTopic, new StompFrameHandler() {
@@ -167,6 +187,7 @@ public class PlayMultiplayerController {
                             Platform.runLater(() -> {
                                 pacman.setPosX((int) position.getX());
                                 pacman.setPosY((int) position.getY());
+                                map.updateTile(pacman.getPosY(), pacman.getPosX(), 'S');
                                 System.out.println(position.getDirection());
                                 updateMap();
                             });
@@ -208,6 +229,50 @@ public class PlayMultiplayerController {
                             endGame(endGame.getWinner());
                         });
                     }
+                }
+            });
+
+            String playerQuitTopic = "/topic/playerQuit/" + currentGameCode;
+            stompSession.subscribe(playerQuitTopic, new StompFrameHandler() {
+                @Override
+                public Type getPayloadType(StompHeaders headers) {
+                    return GameEvent.class;
+                }
+
+                @Override
+                public void handleFrame(StompHeaders headers, Object payload) {
+                    if (payload instanceof GameEvent gameEvent) {
+                        Platform.runLater(() -> {
+                            clearSession();
+                            ScreenManager.showMainScreen();
+                        });
+                    }
+                }
+            });
+
+            stompSession.subscribe("/topic/ghostInvisible/" + currentGameCode, new StompFrameHandler() {
+                @Override
+                public Type getPayloadType(StompHeaders headers) {
+                    return GameEvent.class;
+                }
+
+                @Override
+                public void handleFrame(StompHeaders headers, Object payload) {
+                    if (isPlayer1) Platform.runLater(() -> ghost.getImage().setOpacity(0.0));
+                    ghostInvisibleText.setVisible(true);
+                }
+            });
+
+            stompSession.subscribe("/topic/ghostVisible/" + currentGameCode, new StompFrameHandler() {
+                @Override
+                public Type getPayloadType(StompHeaders headers) {
+                    return GameEvent.class;
+                }
+
+                @Override
+                public void handleFrame(StompHeaders headers, Object payload) {
+                    if (isPlayer1) Platform.runLater(() -> ghost.getImage().setOpacity(1.0));
+                    ghostInvisibleText.setVisible(false);
                 }
             });
 
@@ -258,7 +323,8 @@ public class PlayMultiplayerController {
         Canvas canvas = new Canvas(canvasWidth, canvasHeight);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        // Dessiner la carte (murs, points, gros points)
+        scoreText.setText(String.valueOf(pacman.getScore()));
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 char tile = map.getTile(y, x);
@@ -294,16 +360,15 @@ public class PlayMultiplayerController {
                         pacman.setPosX(x);
                         pacman.setPosY(y);
 
-                        isMouseOpen = !isMouseOpen; // Alterne entre ouvert et fermé
+                        isMouseOpen = !isMouseOpen;
                         if (isMouseOpen) {
-                            pacman.getImage().setImage(pacmanOpen);  // Pacman ouvert
+                            pacman.getImage().setImage(pacmanOpen);
                         } else {
-                            pacman.getImage().setImage(pacmanClosed);  // Pacman fermé
+                            pacman.getImage().setImage(pacmanClosed);
                         }
 
                         char directionPacman = pacman.getDirection();
 
-                        // Met à jour l'orientation de Pacman en fonction de la direction
                         if (directionPacman == 'r') {  // Droite
                             pacman.getImage().setRotate(0);        // Rotation à 0° (regarde vers la droite)
                             pacman.getImage().setScaleX(1);        // Normalement orienté
@@ -323,7 +388,6 @@ public class PlayMultiplayerController {
                         pacman.getImage().setLayoutY(posY);
                         break;
                     default:
-                        // Pas de dessin pour d'autres types
                         break;
                 }
             }
@@ -335,7 +399,6 @@ public class PlayMultiplayerController {
         gamePane.getChildren().clear();
         gamePane.getChildren().add(canvas);
 
-        // Dessiner Pacman
         double pacmanPosX = pacman.getPosX() * cellWidth + canvasOffsetX;
         double pacmanPosY = pacman.getPosY() * cellHeight;
         pacman.getImage().setFitWidth(cellWidth);
@@ -344,7 +407,6 @@ public class PlayMultiplayerController {
         pacman.getImage().setLayoutY(pacmanPosY);
         gamePane.getChildren().add(pacman.getImage());
 
-        // Dessiner Ghost
         double ghostPosX = ghost.getPosX() * cellWidth + canvasOffsetX;
         double ghostPosY = ghost.getPosY() * cellHeight;
         ghost.getImage().setFitWidth(cellWidth);
@@ -394,7 +456,6 @@ public class PlayMultiplayerController {
         if (!inMove)
             inMove = true;
 
-        // Calculer la nouvelle position en fonction de la direction actuelle
         switch (currentDirection) {
             case UP -> {
                 newY -= 1;
@@ -448,6 +509,30 @@ public class PlayMultiplayerController {
         return true;
     }
 
+    private void startGhostInvisibilityTimer() {
+
+        if (isPlayer1) return ;
+
+        ghostInvisibilityTimer = new Timer();
+        ghostInvisibilityTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                sendGhostInvisibility();
+            }
+        }, 0, 10000);
+    }
+
+    private void sendGhostInvisibility() {
+        stompSession.send("/app/ghostInvisible", new GameEvent(currentGameCode) );
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                stompSession.send("/app/ghostVisible", new GameEvent(currentGameCode));
+            }
+        }, 5000);
+    }
+
     private void moveGhost() {
         int newX = ghost.getPosX();
         int newY = ghost.getPosY();
@@ -475,11 +560,9 @@ public class PlayMultiplayerController {
         }
 
         if (map.isValidPosition(newY, newX) && map.isWalkable(newY, newX)) {
-            map.updateTile(ghost.getPosY(), ghost.getPosX(), 'S');
             ghost.setPosX(newX);
             ghost.setPosY(newY);
 
-            map.updateTile(newY, newX, 'b');
             updateMap();
             checkCollision();
         } else {
@@ -503,9 +586,17 @@ public class PlayMultiplayerController {
         }
     }
 
-    private void endGame(String winner) {
+    private void sendQuitEvent() {
+        if (stompSession != null && stompSession.isConnected()) {
+            GameEvent quitEvent = new GameEvent(currentGameCode);
+            stompSession.send("/app/playerQuit", quitEvent);
+        }
+    }
+
+    private void clearSession() {
         if (movementTimer != null) movementTimer.stop();
         if (positionTimer != null) positionTimer.cancel();
+        if (ghostInvisibilityTimer != null) ghostInvisibilityTimer.cancel();
 
         if (stompSession != null && stompSession.isConnected()) {
             try {
@@ -514,6 +605,11 @@ public class PlayMultiplayerController {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void endGame(String winner) {
+
+        this.clearSession();
 
         boolean clientWins = false;
         if (winner.equals("player1") && PlayMultiplayerController.isPlayer1) {

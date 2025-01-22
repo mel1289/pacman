@@ -64,10 +64,9 @@ public class Map {
     }
 
     public void addBigPelletPosition(int x, int y) {
-        // Vérifie si la position (x, y) existe déjà dans la liste
         for (int[] position : positionBigPellet) {
             if (position[0] == x && position[1] == y) {
-                return; // Si la position existe déjà, ne rien faire
+                return;
             }
         }
 

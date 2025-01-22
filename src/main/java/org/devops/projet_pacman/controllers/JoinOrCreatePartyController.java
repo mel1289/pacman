@@ -3,12 +3,12 @@ package org.devops.projet_pacman.controllers;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import org.devops.projet_pacman.ScreenManager;
 import okhttp3.*;
+import org.devops.projet_pacman.Constant;
+import org.devops.projet_pacman.ScreenManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -30,9 +30,6 @@ public class JoinOrCreatePartyController {
 
     @FXML
     private StackPane loadingModal;
-
-    @FXML
-    private ProgressIndicator loadingSpinner;
 
     @FXML
     private Label errorLabel;
@@ -57,7 +54,6 @@ public class JoinOrCreatePartyController {
             }
         });
 
-        // Action pour quitter
         exitButton.setOnMouseClicked(e -> ScreenManager.showMainScreen());
     }
 
@@ -70,7 +66,7 @@ public class JoinOrCreatePartyController {
     }
 
     private void createGame(String playerName) {
-        HttpUrl url = HttpUrl.parse("http://localhost:8080/api/games/create")
+        HttpUrl url = HttpUrl.parse(Constant.API_URL+"games/create")
                 .newBuilder()
                 .addQueryParameter("player1", playerName)
                 .build();
@@ -133,7 +129,7 @@ public class JoinOrCreatePartyController {
         this.loadingModal.setVisible(true);
         this.setControlsEnabled(false);
 
-        HttpUrl url = HttpUrl.parse("http://localhost:8080/api/games/join")
+        HttpUrl url = HttpUrl.parse(Constant.API_URL+"games/join")
                 .newBuilder()
                 .addQueryParameter("code", gameCode)
                 .addQueryParameter("player2", playerName)

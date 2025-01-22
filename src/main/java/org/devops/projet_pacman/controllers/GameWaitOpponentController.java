@@ -9,21 +9,20 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import okhttp3.*;
+import org.devops.projet_pacman.Constant;
 import org.devops.projet_pacman.ScreenManager;
-import org.devops.projet_pacman.events.NewGameEvent;
+import org.devops.projet_pacman.events.GameEvent;
 import org.devops.projet_pacman.utils.GsonMessageConverter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.messaging.simp.stomp.*;
-
-import java.lang.reflect.Type;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
 import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class GameWaitOpponentController {
 
@@ -68,7 +67,7 @@ public class GameWaitOpponentController {
 
         try {
             Future<StompSession> future = stompClient.connect(
-                    "ws://localhost:8080/ws",
+                    Constant.SOCKET_URL,
                     new WebSocketHttpHeaders(),
                     sessionHandler
             );
@@ -87,13 +86,19 @@ public class GameWaitOpponentController {
                     try {
                         Gson gson = new Gson();
                         String json = gson.toJson(payload);
-                        NewGameEvent notification = gson.fromJson(json, NewGameEvent.class);
+                        GameEvent notification = gson.fromJson(json, GameEvent.class);
 
                         if (notification.getCode() != null && notification.getCode().equals(currentGameCode)) {
                             PlayMultiplayerController.currentGameCode = notification.getCode();
                             PlayMultiplayerController.isPlayer1 = true;
                             Platform.runLater(ScreenManager::showPlayMultiplayer);
-                        }
+                            if (stompSession != null && stompSession.isConnected()) {
+                                try {
+                                    stompSession.disconnect();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -112,7 +117,7 @@ public class GameWaitOpponentController {
             return;
         }
 
-        HttpUrl url = HttpUrl.parse("http://localhost:8080/api/games/cancel")
+        HttpUrl url = HttpUrl.parse(Constant.API_URL+"games/cancel")
                 .newBuilder()
                 .addQueryParameter("code", currentGameCode)
                 .build();

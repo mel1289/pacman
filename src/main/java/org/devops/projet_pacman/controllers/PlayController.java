@@ -2,37 +2,28 @@ package org.devops.projet_pacman.controllers;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import org.devops.projet_pacman.MenuApplication;
 import org.devops.projet_pacman.ScreenManager;
 import org.devops.projet_pacman.entities.Ghost;
 import org.devops.projet_pacman.entities.Map;
 import org.devops.projet_pacman.entities.Pacman;
-import org.devops.projet_pacman.entities.Pellet;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class PlayController {
 
     @FXML
-    private Pane gamePane; // Un Pane dans votre fichier FXML pour afficher le jeu.
+    private Pane gamePane;
 
     @FXML
     private StackPane btnRetour;
@@ -45,9 +36,8 @@ public class PlayController {
     private final Image pacmanOpen = new Image(getClass().getResource("/org/devops/projet_pacman/images/pacman_opened.png").toExternalForm());
     private final Image pacmanClosed = new Image(getClass().getResource("/org/devops/projet_pacman/images/pacman_closed.png").toExternalForm());
 
-    private KeyCode currentDirection = null;  // Direction actuelle de Pacman
-    private AnimationTimer movementTimer = null;  // Timer pour gérer le mouvement continu
-    private boolean isMoving = false;  // Indicateur si Pacman est en mouvement
+    private KeyCode currentDirection = null;
+    private AnimationTimer movementTimer = null;
 
     private Map map;
     private Pacman pacman;
@@ -56,21 +46,15 @@ public class PlayController {
 
     private char ghostDirection = 'R';
 
-    private static final double PACMAN_SPEED = 0.2;  // Ralentir Pacman, déplacer toutes les 0.5 secondes
-    private double lastMoveTime = 0;  // Temps depuis le dernier mouvement
+    private static final double PACMAN_SPEED = 0.2;
+    private double lastMoveTime = 0;
 
     private MenuApplication menuApplication;
 
     @FXML
     public void initialize() {
         btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
-
-        //pacmanImage.setLayoutX(gamePane.getPrefWidth() / 2);
-        //pacmanImage.setLayoutY(gamePane.getPrefHeight() / 2);
-
         btnRetour.setOnMouseClicked(e -> ScreenManager.showMainScreen());
-
-        // VBox.setMargin(btnRetour, new Insets(-10, 0, 0, 0));
 
         String[] base_map = {
                 "/////////////////////",
@@ -137,8 +121,6 @@ public class PlayController {
 
                 boolean isPelletInMap = map.containsPelletPosition(x, y);
                 boolean isBigPelletInMap = map.containsBigPelletPosition(x, y);
-
-                // System.out.println(x + " * " + cellWidth + " = " + posX);
 
                 if (tile == '/') {
                     gc.setFill(Color.BLUE);
@@ -343,7 +325,7 @@ public class PlayController {
 
             // Vérifier si la case est walkable
             if (map.isWalkable(newY, newX)) {
-                // Si oui, on marque le mouvement comme effectué
+                // Si oui, on marque le mouvement comme e ffectué
                 moved = true;
 
                 // Mise à jour de l'ancienne case du fantôme
