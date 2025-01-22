@@ -259,8 +259,8 @@ public class PlayMultiplayerController {
                 @Override
                 public void handleFrame(StompHeaders headers, Object payload) {
                     if (isPlayer1) Platform.runLater(() -> ghost.getImage().setOpacity(0.0));
+                    else ghost.setImage("/org/devops/projet_pacman/images/ghost_invisble.png");
                     ghostInvisibleText.setVisible(true);
-                    ghost.setImage("/org/devops/projet_pacman/images/ghost_invisble.png");
                 }
             });
 
